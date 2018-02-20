@@ -1,0 +1,76 @@
+{
+    "Workflow": {
+        "ID": {
+            "type": "int",
+            "primaryKey": true,
+            "default": null,
+            "required": true
+        },
+        "CreatedAt": {
+            "type": "date",
+            "default": "CURRENT_TIMESTAMP",
+            "required": true
+        },
+        "Name": {
+            "type": "varchar(80)",
+            "default": null,
+            "required": false
+        }
+    },
+    "State": {
+        "ID": {
+            "type": "int",
+            "primaryKey": true,
+            "default": null,
+            "required": true
+        },
+        "CreatedAt": {
+            "type": "date",
+            "default": "CURRENT_TIMESTAMP",
+            "required": true
+        },
+        "Name": {
+            "type": "varchar(80)",
+            "default": null,
+            "required": false
+        },
+        "Text": {
+            "type": "varchar(255)",
+            "default": null,
+            "required": false
+        },
+        "WorkflowID": {
+            "type": "int",
+            "foreignKey": "Workflow(ID)",
+            "required": true
+        }
+    },
+    "Button": {
+        "ID": {
+            "type": "int",
+            "primaryKey": true,
+            "default": null,
+            "required": true
+        },
+        "CreatedAt": {
+            "type": "date",
+            "default": "CURRENT_TIMESTAMP",
+            "required": true
+        },
+        "Text": {
+            "type": "varchar(255)",
+            "default": null,
+            "required": false
+        },
+        "Goto": {
+            "type": "varchar(255)",
+            "default": null,
+            "required": false
+        },
+        "StateID": {
+            "type": "int",
+            "foreignKey": "State(ID)",
+            "required": true
+        }
+    }
+}

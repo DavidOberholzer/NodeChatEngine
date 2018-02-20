@@ -1,0 +1,25 @@
+{
+  "name": "node-portal-server",
+  "version": "0.0.1",
+  "description": "A node version of the portal server to talk to feersum.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "portal",
+    "server",
+    "feersum",
+    "websockets"
+  ],
+  "author": "David Oberholzer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-ws": "^3.0.0",
+    "fs": "0.0.1-security",
+    "pg": "^7.4.1"
+  }
+}
