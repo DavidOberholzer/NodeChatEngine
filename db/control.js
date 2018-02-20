@@ -13,6 +13,14 @@ module.exports = {
     setup: () => {
         let tables = utils.readFile('./db/db_data/tables.json');
         Object.entries(tables).map(table => {
+            db
+                .query('DROP TABLE ' + table[0] + ';')
+                .then(res => {
+                    console.log('Dropped table %s', table[0]);
+                })
+                .catch(e => {
+                    // Ignore errors.
+                });
             let queryString = 'CREATE TABLE IF NOT EXISTS ' + table[0] + ' (\n';
             let primaryKey = '';
             let foreignKeys = '';
@@ -34,11 +42,13 @@ module.exports = {
                         field[0] +
                         ') REFERENCES ' +
                         field[1].foreignKey +
-                        '\n';
+                        ',\n';
                 }
             });
             queryString +=
-                primaryKey + (foreignKeys ? '\n, ' + foreignKeys : '') + ');';
+                primaryKey +
+                (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') +
+                ');';
             console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
             console.log(queryString);
             db
@@ -46,10 +56,17 @@ module.exports = {
                 .then(res =>
                     console.log(
                         logStyle.FgGreen,
-                        'SUCCESS: Created/Existing table!'
+                        ('SUCCESS: Created table %s!', table[0])
                     )
                 )
                 .catch(e => console.log(logStyle.FgRed, e));
+        });
+    },
+    loadData: () => {
+        let data = utils.readFile('./db/db_data/chatbots.json');
+        let workflows = data.workflows;
+        workflows.map(workflow => {
+            let queryString = 'INSERT INTO workflow ()';
         });
     }
 };

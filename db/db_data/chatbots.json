@@ -1,18 +1,56 @@
 {
     "workflows": [
         {
-            "id": 1,
-            "name": "David's First Bot"
-        }
-    ],
-    "states": [
-        {
-            "id": 1,
-            "name": "Hello",
-            "message": "Hello, I'm David's first Bot!"
-        },
-        {
-            "id": 
+            "name": "David's First Bot",
+            "states": [
+                {
+                    "name": "Hello",
+                    "text": "Hello, I'm David's first Bot!",
+                    "buttons": [
+                        {
+                            "text": "Path 1",
+                            "goto": 2
+                        },
+                        {
+                            "text": "Path 2",
+                            "goto": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "Path 1",
+                    "text": "This is path 1! YAY!",
+                    "buttons": [
+                        {
+                            "text": "Continue",
+                            "goto": 4
+                        },
+                        {
+                            "text": "Go Back",
+                            "goto": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "Path 2",
+                    "text": "I'm not a fan of path 2...",
+                    "buttons": [
+                        {
+                            "text": "Continue",
+                            "goto": 4
+                        },
+                        {
+                            "text": "Go Back",
+                            "goto": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "Continued",
+                    "text": "You continued thanks! Let us go to the beginning",
+                    "auto": 1
+                }
+            ]
         }
     ]
 }
