@@ -1,9 +1,12 @@
 const utils = require('./utils');
 const logStyle = require('../constants');
+const functions = require('../app');
 
 const client = require('./client');
 
 const db = client.client;
+
+let messageBuffer = [];
 
 console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
 db.connect();
@@ -53,20 +56,109 @@ module.exports = {
             console.log(queryString);
             db
                 .query(queryString)
-                .then(res =>
+                .then(res => {
                     console.log(
                         logStyle.FgGreen,
-                        ('SUCCESS: Created table %s!', table[0])
-                    )
-                )
+                        'SUCCESS: Created table ' + table[0]
+                    );
+                })
                 .catch(e => console.log(logStyle.FgRed, e));
         });
+        loadData();
     },
-    loadData: () => {
-        let data = utils.readFile('./db/db_data/chatbots.json');
-        let workflows = data.workflows;
-        workflows.map(workflow => {
-            let queryString = 'INSERT INTO workflow ()';
-        });
+    connect: workflowID => {
+        let query =
+            'SELECT * FROM state WHERE workflowid=' +
+            workflowID +
+            ' AND startstate=true;';
+        stateQuery(query, 'Start State Retrieved');
+    },
+    sendMessage: message => {
+        if (message.goto) {
+            let queryString =
+                'SELECT * FROM state WHERE id=' + message.goto + ';';
+            stateQuery(queryString, 'State Retrieved');
+        } else {
+            messageBuffer.push({
+                text: 'Message not valid without goto!'
+            });
+        }
+    },
+    getMessageBuffer: () => {
+        let messages = messageBuffer;
+        messageBuffer = [];
+        return messages;
     }
+};
+
+const loadTableData = (tableName, tableData) => {
+    console.log(logStyle.FgYellow, 'Loading Table Data for ' + tableName);
+    tableData.map(row => {
+        let queryString1 = 'INSERT INTO ' + tableName + ' (';
+        let queryString2 = 'VALUES (';
+        Object.entries(row).map(column => {
+            queryString1 += column[0] + ', ';
+            let value = utils.escapeRegExp(column[1].toString());
+            queryString2 += "'" + value + "', ";
+        });
+        let queryString =
+            queryString1.slice(0, -2) +
+            ')\n' +
+            queryString2.slice(0, -2) +
+            ');';
+        console.log(queryString);
+        db
+            .query(queryString)
+            .then(res => {
+                console.log(logStyle.FgGreen, 'Loaded Entry');
+            })
+            .catch(e => {
+                console.log(logStyle.FgYellow, e);
+            });
+    });
+    console.log(logStyle.FgGreen, 'Loaded Table Data for ' + tableName);
+};
+
+const loadData = () => {
+    let data = utils.readFile('./db/db_data/chatbots.json');
+    let tables = Object.entries(data);
+    tables.map((tableData, index) => {
+        loadTableData(tableData[0], tableData[1]);
+    });
+};
+
+const stateQuery = (query, successMessage) => {
+    db
+        .query(query)
+        .then(res => {
+            console.log(logStyle.FgGreen, successMessage);
+            buttonQuery(res.rows[0]);
+        })
+        .catch(e => {
+            console.log(e);
+            let result = {};
+            result['text'] = 'Something went wrong! Please try again later.';
+            addToMessageBuffer(result);
+        });
+};
+
+const buttonQuery = state => {
+    const query = 'SELECT * FROM button WHERE stateid=' + state.id + ';';
+    const appendButtons = buttons => {
+        state['buttons'] = buttons;
+        addToMessageBuffer(state);
+    };
+    db
+        .query(query)
+        .then(res => {
+            appendButtons(res.rows);
+        })
+        .catch(e => {
+            console.log(e);
+            appendButtons([]);
+        });
+};
+
+const addToMessageBuffer = message => {
+    messageBuffer.push(message);
 };

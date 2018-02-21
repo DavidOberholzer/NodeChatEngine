@@ -7,5 +7,8 @@ module.exports = {
         const content = fs.readFileSync(filePath);
         console.log(logStyle.FgGreen, 'DB Tables file read.');
         return JSON.parse(content);
+    },
+    escapeRegExp: value => {
+        return value.replace(/[\']/g, "'$&");
     }
 };

@@ -1,9 +1,8 @@
 {
     "Workflow": {
         "ID": {
-            "type": "int",
+            "type": "serial",
             "primaryKey": true,
-            "default": null,
             "required": true
         },
         "CreatedAt": {
@@ -13,15 +12,14 @@
         },
         "Name": {
             "type": "varchar(80)",
-            "default": null,
+            "default": "null",
             "required": false
         }
     },
     "State": {
         "ID": {
-            "type": "int",
+            "type": "serial",
             "primaryKey": true,
-            "default": null,
             "required": true
         },
         "CreatedAt": {
@@ -31,18 +29,23 @@
         },
         "Name": {
             "type": "varchar(80)",
-            "default": null,
+            "default": "null",
             "required": false
         },
         "Text": {
             "type": "varchar(255)",
-            "default": null,
+            "default": "null",
+            "required": false
+        },
+        "StartState": {
+            "type": "BOOLEAN",
+            "default": "false",
             "required": false
         },
         "Auto": {
             "type": "int",
             "foreignKey": "State(ID)",
-            "default": null,
+            "default": "null",
             "required": false
         },
         "WorkflowID": {
@@ -53,9 +56,8 @@
     },
     "Button": {
         "ID": {
-            "type": "int",
+            "type": "serial",
             "primaryKey": true,
-            "default": null,
             "required": true
         },
         "CreatedAt": {
@@ -65,12 +67,12 @@
         },
         "Text": {
             "type": "varchar(255)",
-            "default": null,
+            "default": "null",
             "required": false
         },
         "Goto": {
             "type": "int",
-            "default": null,
+            "default": "null",
             "foreignKey": "State(ID)",
             "required": false
         },

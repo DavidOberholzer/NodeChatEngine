@@ -28,10 +28,25 @@ app.ws('/echo', (wss, request) => {
 
 app.ws('/chat', (wss, request) => {
     console.log(logStyle.FgGreen, 'Chat Websocket Connection Established!');
-
+    DBcontroller.connect(1);
+    const receiveMessage = setInterval(() => {
+        let messageList = DBcontroller.getMessageBuffer();
+        if (messageList.length > 0) {
+            console.log(messageList);
+        }
+        messageList.map((message, index) => {
+            wss.send(JSON.stringify(message));
+            if (index === messageList.length - 1) {
+                if (message.auto) {
+                    DBcontroller.sendMessage({ goto: message.auto });
+                }
+            }
+        });
+    }, 200);
     wss.on('message', message => {
         try {
             let message_data = JSON.parse(message);
+            DBcontroller.sendMessage(message_data);
         } catch (error) {
             console.log(logStyle.FgRed, 'Message format is not JSON.');
             wss.send(
@@ -44,6 +59,7 @@ app.ws('/chat', (wss, request) => {
     });
     wss.on('close', () => {
         console.log(logStyle.FgRed, 'Websocket disconnected');
+        clearInterval(receiveMessage);
     });
 });
 
