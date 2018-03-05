@@ -16,10 +16,13 @@
   "author": "David Oberholzer",
   "license": "ISC",
   "dependencies": {
+    "admin-on-rest": "^1.4.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-ws": "^3.0.0",
     "fs": "0.0.1-security",
-    "pg": "^7.4.1"
+    "pg": "^7.4.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }

@@ -4,15 +4,20 @@ const functions = require('../app');
 
 const client = require('./client');
 
-const db = client.client;
+let db = null;
 
 let messageBuffer = [];
 
-console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
-db.connect();
-console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
-
 module.exports = {
+    getDB: () => {
+        if (!db) {
+            console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
+            db = client.client;
+            db.connect();
+            console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
+        }
+        return db;
+    },
     setup: () => {
         let tables = utils.readFile('./db/db_data/tables.json');
         Object.entries(tables).map(table => {
