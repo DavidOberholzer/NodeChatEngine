@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const cors = require('cors');
 const DBcontroller = require('./db/control');
 const logStyle = require('./constants');
 
@@ -11,6 +12,12 @@ let db = DBcontroller.getDB();
 DBcontroller.setup();
 
 app.use(bodyParser.json());
+app.use(express.static('static'));
+
+var corsOptions = {
+    exposedHeaders: 'Content-Range'
+};
+app.use(cors(corsOptions));
 
 /* Websocket code for chatting to a bot! */
 
@@ -66,6 +73,16 @@ app.ws('/chat', (wss, request) => {
     });
 });
 
+/* Normal URL paths for site */
+
+app.get('/', (req, res) => {
+    res.sendFile('index.html');
+});
+
+app.get('/admin', (req, res) => {
+    res.sendFile('index.html');
+});
+
 /* API code for Admin on Rest! */
 
 const apiVer = '/api/v1';
@@ -102,7 +119,6 @@ const getItems = (table, filters = null, sort = null, limit = null) => {
     }
     // Add limit if specified.
     query = `${query}${limit ? `\nLIMIT ${limit};` : ';'}`;
-    console.log(query);
     return db.query(query);
 };
 
@@ -116,9 +132,9 @@ const updateItem = (table, body, id) => {
     return db.query(query);
 };
 
-const createItem = (table, body, id) => {
-    let query1 = `INSERT INTO ${table} (id, `;
-    let query2 = `VALUES ('${id}', `;
+const createItem = (table, body) => {
+    let query1 = `INSERT INTO ${table} ( `;
+    let query2 = `VALUES ( `;
     Object.entries(body).map(field => {
         query1 += `${field[0]}, `;
         query2 += `'${field[1]}', `;
@@ -137,10 +153,18 @@ const deleteItem = (table, id) => {
 
 app.get(`${apiVer}/workflows`, (req, res) => {
     let query = req.query;
-    let filters = query.filter ? JSON.parse(`{${query.filter}}`) : null;
-    let sort = query.sort ? JSON.parse(query.sort) : null;
-    let limit = query.range ? JSON.parse(query.range)[1] : null;
-    let send = data => res.send(data);
+    let filters =
+        query.filter && query.filter !== '{}'
+            ? JSON.parse(`${query.filter}`)
+            : null;
+    let sort =
+        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
+    let limit =
+        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
+    let send = data => {
+        res.header('Content-Range', data.length);
+        res.send(data);
+    };
     getItems('workflow', filters, sort, limit)
         .then(data => send(data.rows))
         .catch(err => {
@@ -160,11 +184,10 @@ app.get(`${apiVer}/workflows/:ID`, (req, res) => {
         });
 });
 
-app.post(`${apiVer}/workflows/:ID`, (req, res) => {
+app.post(`${apiVer}/workflows`, (req, res) => {
     if (req.body) {
-        let workflowID = req.params.ID;
         let send = data => res.send(data);
-        createItem('workflow', req.body, workflowID)
+        createItem('workflow', req.body)
             .then(data => send(data.rows[0]))
             .catch(err => {
                 console.log(err);
@@ -206,10 +229,18 @@ app.delete(`${apiVer}/workflows/:ID`, (req, res) => {
 
 app.get(`${apiVer}/states`, (req, res) => {
     let query = req.query;
-    let filters = query.filter ? JSON.parse(`{${query.filter}}`) : null;
-    let sort = query.sort ? JSON.parse(query.sort) : null;
-    let limit = query.range ? JSON.parse(query.range)[1] : null;
-    let send = data => res.send(data);
+    let filters =
+        query.filter && query.filter !== '{}'
+            ? JSON.parse(`${query.filter}`)
+            : null;
+    let sort =
+        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
+    let limit =
+        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
+    let send = data => {
+        res.header('Content-Range', data.length);
+        res.send(data);
+    };
     getItems('state', filters, sort, limit)
         .then(data => send(data.rows))
         .catch(err => {
@@ -229,11 +260,10 @@ app.get(`${apiVer}/states/:ID`, (req, res) => {
         });
 });
 
-app.post(`${apiVer}/states/:ID`, (req, res) => {
+app.post(`${apiVer}/states`, (req, res) => {
     if (req.body) {
-        let stateID = req.params.ID;
         let send = data => res.send(data);
-        createItem('state', req.body, stateID)
+        createItem('state', req.body)
             .then(data => send(data.rows[0]))
             .catch(err => {
                 console.log(err);
@@ -275,10 +305,18 @@ app.delete(`${apiVer}/states/:ID`, (req, res) => {
 
 app.get(`${apiVer}/buttons`, (req, res) => {
     let query = req.query;
-    let filters = query.filter ? JSON.parse(`{${query.filter}}`) : null;
-    let sort = query.sort ? JSON.parse(query.sort) : null;
-    let limit = query.range ? JSON.parse(query.range)[1] : null;
-    let send = data => res.send(data);
+    let filters =
+        query.filter && query.filter !== '{}'
+            ? JSON.parse(`${query.filter}`)
+            : null;
+    let sort =
+        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
+    let limit =
+        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
+    let send = data => {
+        res.header('Content-Range', data.length);
+        res.send(data);
+    };
     getItems('button', filters, sort, limit)
         .then(data => send(data.rows))
         .catch(err => {
