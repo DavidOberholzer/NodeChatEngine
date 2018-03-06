@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    EditButton,
     List,
     Datagrid,
     BooleanField,
@@ -20,6 +21,7 @@ export const ButtonList = props => (
             <ReferenceField source="stateid" reference="states">
                 <TextField source="name" />
             </ReferenceField>
+            <EditButton />
         </Datagrid>
     </List>
 );

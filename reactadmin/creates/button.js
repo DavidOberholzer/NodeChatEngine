@@ -3,14 +3,12 @@ import React from 'react';
 import {
     Create,
     SimpleForm,
-    BooleanInput,
     ReferenceInput,
-    LongTextInput,
     TextInput,
     SelectInput
 } from 'admin-on-rest';
 
-const validationCreateState = values => {
+const validationCreateButton = values => {
     const errors = {};
     if (!values.id) {
         errors.id = ['An ID is required.'];
@@ -20,32 +18,29 @@ const validationCreateState = values => {
     if (!values.name) {
         errors.name = ['A name is required.'];
     }
-    if (!values.workflowid) {
-        errors.workflowid = ['This state must belong to a workflow'];
+    if (!values.stateid) {
+        errors.stateid = ['This button must belong to a state'];
     }
     return errors;
 };
 
-export const StateCreate = props => (
-    <Create title="Create New State" {...props}>
-        <SimpleForm validate={validationCreateState}>
+export const ButtonCreate = props => (
+    <Create title="Create New Button" {...props}>
+        <SimpleForm validate={validationCreateButton}>
             <TextInput source="id" />
-            <TextInput source="name" />
-            <LongTextInput source="text" />
-            <BooleanInput source="startstate" label="Is Start State" />
+            <TextInput source="text" />
             <ReferenceInput
-                source="auto"
-                label="Auto Goto State"
+                source="goto"
+                label="Goto State"
                 reference="states"
-                target="workflowid"
                 allowEmpty
             >
                 <SelectInput source="id" optionText="name" />
             </ReferenceInput>
             <ReferenceInput
-                source="workflowid"
-                label="Workflow"
-                reference="workflows"
+                source="stateid"
+                label="State"
+                reference="states"
                 allowEmpty
             >
                 <SelectInput source="id" optionText="name" />

@@ -28,10 +28,11 @@ export const StateEdit = props => (
             <BooleanInput source="startstate" label="Is Start State" />
             <ReferenceInput
                 source="auto"
-                label="Auto Goto Workflow"
-                reference="workflows"
+                label="Auto Goto State"
+                reference="states"
+                allowEmpty
             >
-                <SelectInput optionText="name" />
+                <SelectInput source="id" optionText="name" />
             </ReferenceInput>
             <ReferenceManyField
                 label="Buttons"
@@ -42,14 +43,7 @@ export const StateEdit = props => (
                     <TextField source="id" />
                     <DateField source="createdat" label="Created" />
                     <TextField source="text" />
-                    <ReferenceField
-                        source="goto"
-                        reference="states"
-                        allowEmpty={true}
-                    >
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <ReferenceField source="stateid" reference="states">
+                    <ReferenceField source="goto" reference="states" allowEmpty>
                         <TextField source="name" />
                     </ReferenceField>
                     <EditButton />

@@ -3,9 +3,9 @@ const logStyle = require('../constants');
 
 module.exports = {
     readFile: filePath => {
-        console.log(logStyle.FgYellow, 'Started Reading DB Tables File');
+        // console.log(logStyle.FgYellow, 'Started Reading DB Tables File');
         const content = fs.readFileSync(filePath);
-        console.log(logStyle.FgGreen, 'DB Tables file read.');
+        // console.log(logStyle.FgGreen, 'DB Tables file read.');
         return JSON.parse(content);
     },
     escapeRegExp: value => {

@@ -94,13 +94,12 @@ const getItems = (table, filters = null, sort = null, limit = null) => {
     // Add all filters to WHERE clause.
     if (filters) {
         filters = Object.entries(filters);
-
         filters.map((filter, index) => {
             if (!(filter[1] instanceof Array)) {
-                query += `${filter[0]} = ${filter[1]} OR `;
+                query += `${filter[0]} = ${filter[1]} AND `;
             } else {
                 filter[1].map(value => {
-                    query += `${filter[0]} = ${filter[1]} AND `;
+                    query += `${filter[0]} = ${value} OR `;
                 });
             }
             if (index === filters.length - 1) {
@@ -128,7 +127,6 @@ const updateItem = (table, body, id) => {
         query += `${field[0]} = '${field[1]}', `;
     });
     query = `${query.slice(0, -2)}\nWHERE id=${id};`;
-    console.log(query);
     return db.query(query);
 };
 
@@ -140,7 +138,6 @@ const createItem = (table, body) => {
         query2 += `'${field[1]}', `;
     });
     query = `${query1.slice(0, -2)})\n${query2.slice(0, -2)});`;
-    console.log(query);
     return db.query(query);
 };
 
@@ -188,7 +185,14 @@ app.post(`${apiVer}/workflows`, (req, res) => {
     if (req.body) {
         let send = data => res.send(data);
         createItem('workflow', req.body)
-            .then(data => send(data.rows[0]))
+            .then(data => {
+                getItems('workflow', { id: req.body.id })
+                    .then(data => send(data.rows[0]))
+                    .catch(err => {
+                        console.log(err);
+                        send(err);
+                    });
+            })
             .catch(err => {
                 console.log(err);
             });
@@ -252,7 +256,7 @@ app.get(`${apiVer}/states`, (req, res) => {
 app.get(`${apiVer}/states/:ID`, (req, res) => {
     let stateID = req.params.ID;
     let send = data => res.send(data);
-    getItems('state', stateID)
+    getItems('state', { id: stateID })
         .then(data => send(data.rows[0]))
         .catch(err => {
             console.log(err);
@@ -264,7 +268,14 @@ app.post(`${apiVer}/states`, (req, res) => {
     if (req.body) {
         let send = data => res.send(data);
         createItem('state', req.body)
-            .then(data => send(data.rows[0]))
+            .then(data => {
+                getItems('state', { id: req.body.id })
+                    .then(data => send(data.rows[0]))
+                    .catch(err => {
+                        console.log(err);
+                        send(err);
+                    });
+            })
             .catch(err => {
                 console.log(err);
             });
@@ -325,17 +336,30 @@ app.get(`${apiVer}/buttons`, (req, res) => {
 });
 
 app.get(`${apiVer}/buttons/:ID`, (req, res) => {
-    let stateID = req.params.ID;
+    let buttonID = req.params.ID;
     let send = data => res.send(data);
-    getItems('button', stateID)
+    getItems('button', { id: buttonID })
         .then(data => send(data.rows[0]))
         .catch(err => {
             console.log(err);
         });
 });
 
-app.post(`${apiVer}/buttons/:ID`, (req, res) => {
+app.post(`${apiVer}/buttons`, (req, res) => {
     if (req.body) {
+        let send = data => res.send(data);
+        createItem('button', req.body)
+            .then(data => {
+                getItems('button', { id: req.body.id })
+                    .then(data => send(data.rows[0]))
+                    .catch(err => {
+                        console.log(err);
+                        send(err);
+                    });
+            })
+            .catch(err => {
+                console.log(err);
+            });
     } else {
         res.send({ code: 400, message: 'No Body found' });
     }
@@ -343,6 +367,13 @@ app.post(`${apiVer}/buttons/:ID`, (req, res) => {
 
 app.put(`${apiVer}/buttons/:ID`, (req, res) => {
     if (req.body) {
+        let buttonID = req.params.ID;
+        let send = data => res.send(data);
+        updateItem('button', req.body, buttonID)
+            .then(data => send(data))
+            .catch(err => {
+                console.log(err);
+            });
     } else {
         res.send({ code: 400, message: 'No Body found' });
     }

@@ -18,9 +18,9 @@ export const StateList = props => (
             <BooleanField source="startstate" label="Is Start State" />
             <ReferenceField
                 source="auto"
-                label="Auto Goto Workflow"
-                reference="workflows"
-                allowEmpty={true}
+                label="Auto Goto State"
+                reference="states"
+                allowEmpty
             >
                 <TextField source="name" />
             </ReferenceField>

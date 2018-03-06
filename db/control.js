@@ -21,14 +21,6 @@ module.exports = {
     setup: () => {
         let tables = utils.readFile('./db/db_data/tables.json');
         Object.entries(tables).map(table => {
-            db
-                .query('DROP TABLE ' + table[0] + ';')
-                .then(res => {
-                    console.log('Dropped table %s', table[0]);
-                })
-                .catch(e => {
-                    // Ignore errors.
-                });
             let queryString = 'CREATE TABLE IF NOT EXISTS ' + table[0] + ' (\n';
             let primaryKey = '';
             let foreignKeys = '';
@@ -57,19 +49,20 @@ module.exports = {
                 primaryKey +
                 (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') +
                 ');';
-            console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
-            console.log(queryString);
+            // Debugging console logs
+            // console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
+            // console.log(queryString);
             db
                 .query(queryString)
                 .then(res => {
-                    console.log(
-                        logStyle.FgGreen,
-                        'SUCCESS: Created table ' + table[0]
-                    );
+                    // Debugging console logs
+                    // console.log(
+                    //     logStyle.FgGreen,
+                    //     'SUCCESS: Created table ' + table[0]
+                    // );
                 })
                 .catch(e => console.log(logStyle.FgRed, e));
         });
-        loadData();
     },
     connect: workflowID => {
         let query =
@@ -95,6 +88,8 @@ module.exports = {
         return messages;
     }
 };
+
+/* Depricated code loading of json file data into tables. */
 
 const loadTableData = (tableName, tableData) => {
     console.log(logStyle.FgYellow, 'Loading Table Data for ' + tableName);
@@ -163,6 +158,8 @@ const buttonQuery = state => {
             appendButtons([]);
         });
 };
+
+/* End of depricated code */
 
 const addToMessageBuffer = message => {
     messageBuffer.push(message);
