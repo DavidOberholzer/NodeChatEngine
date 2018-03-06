@@ -22,7 +22,12 @@ console.log('Admin Bundle JS Imported and running');
 document.getElementById('Admin') &&
     render(
         <Admin
-            title="Node Chat Engine"
+            title={
+                <div style={{ display: 'flex' }}>
+                    <img src="Logo.png" width="100" height="64" />
+                    <p style={{ margin: 0 }}>Node Chat Engine</p>
+                </div>
+            }
             theme={getMuiTheme(customTheme)}
             restClient={simpleRestClient('http://localhost:3000/api/v1')}
         >

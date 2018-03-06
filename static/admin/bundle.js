@@ -42804,7 +42804,16 @@ console.log('Admin Bundle JS Imported and running');
 document.getElementById('Admin') && (0, _reactDom.render)(_react2.default.createElement(
     _adminOnRest.Admin,
     {
-        title: 'Node Chat Engine',
+        title: _react2.default.createElement(
+            'div',
+            { style: { display: 'flex' } },
+            _react2.default.createElement('img', { src: 'Logo.png', width: '100', height: '64' }),
+            _react2.default.createElement(
+                'p',
+                { style: { margin: 0 } },
+                'Node Chat Engine'
+            )
+        ),
         theme: (0, _getMuiTheme2.default)(_theme2.default),
         restClient: (0, _adminOnRest.simpleRestClient)('http://localhost:3000/api/v1')
     },
