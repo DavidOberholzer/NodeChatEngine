@@ -1,44 +1,38 @@
 {
-  "name": "node-chat-engine",
-  "version": "0.0.1",
-  "description": "My own chat engine based on Node!",
-  "main": "app.js",
-  "scripts": {
-    "build": "webpack --colors --progress",
-    "build:dev": "webpack-dashboard -- webpack-dev-server --inline",
-    "start": "npm build && node app"
-  },
-  "keywords": [
-    "node",
-    "portal",
-    "server",
-    "feersum",
-    "websockets"
-  ],
-  "author": "David Oberholzer",
-  "license": "ISC",
-  "dependencies": {
-    "admin-on-rest": "^1.4.0",
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "express-ws": "^3.0.0",
-    "fs": "0.0.1-security",
-    "material-ui": "^0.20.0",
-    "pg": "^7.4.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.3",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "webpack": "^3.11.0",
-    "webpack-dashboard": "^0.4.0",
-    "webpack-dev-server": "^2.5.1",
-    "webpack-node-externals": "^1.6.0"
-  }
+    "name": "node-chat-engine",
+    "version": "0.0.1",
+    "description": "My own chat engine based on Node!",
+    "main": "app.js",
+    "scripts": {
+        "build": "webpack --colors --progress",
+        "build:dev": "webpack-dashboard -- webpack-dev-server --inline",
+        "start": "npm run build && node app"
+    },
+    "keywords": ["node", "portal", "server", "feersum", "websockets"],
+    "author": "David Oberholzer",
+    "license": "ISC",
+    "dependencies": {
+        "admin-on-rest": "^1.4.0",
+        "body-parser": "^1.18.2",
+        "cors": "^2.8.4",
+        "express": "^4.16.2",
+        "express-ws": "^3.0.0",
+        "fs": "0.0.1-security",
+        "material-ui": "^0.20.0",
+        "pg": "^7.4.1",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.3",
+        "babel-plugin-add-module-exports": "^0.2.1",
+        "babel-preset-es2015": "^6.24.1",
+        "babel-preset-react": "^6.24.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "webpack": "^3.11.0",
+        "webpack-dashboard": "^0.4.0",
+        "webpack-dev-server": "^2.5.1",
+        "webpack-node-externals": "^1.6.0"
+    }
 }
