@@ -1,6 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { simpleRestClient, Admin, Resource } from 'admin-on-rest';
+import customTheme from './theme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import { ButtonList } from './lists/buttons';
 import { StateList } from './lists/states';
@@ -21,6 +23,7 @@ document.getElementById('Admin') &&
     render(
         <Admin
             title="Node Chat Engine"
+            theme={getMuiTheme(customTheme)}
             restClient={simpleRestClient('http://localhost:3000/api/v1')}
         >
             <Resource
