@@ -1,0 +1,61 @@
+html {
+  background-color: #fdcdcd;
+  margin-left: 35%;
+  margin-right: 35%; }
+
+.Button {
+  padding: 0.5rem;
+  display: block;
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  width: 100%;
+  transition: 0.25s; }
+  .Button:hover {
+    transform: translateY(-0.25em); }
+  .Button--plain {
+    background-color: rgba(251, 255, 255, 0.384);
+    color: black; }
+  .Button--disabled {
+    background-color: #d6d6d6;
+    color: white; }
+
+.Message {
+  padding: 0.75rem;
+  display: inline-block;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  transition: 0.5s; }
+  .Message--user {
+    background-color: #604d9e;
+    border-bottom-left-radius: 0px; }
+  .Message--remote {
+    background-color: #9b5c67;
+    border-bottom-right-radius: 0px; }
+  .Message--old {
+    background-color: #d6d6d6;
+    color: white; }
+
+.MessageContainer {
+  display: flex;
+  flex-direction: column; }
+
+.TextContainer {
+  display: flex; }
+  .TextContainer--user {
+    justify-content: flex-start; }
+  .TextContainer--remote {
+    justify-content: flex-end; }
+
+.ButtonContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+  margin-bottom: 10px; }

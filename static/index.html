@@ -1,1 +1,16 @@
-<p>Hello there</p>
+<head>
+    <script src="react-chat-ui.js"></script>
+    <link rel="stylesheet" href="react-chat-ui.css" />
+</head>
+
+<div id="chat-element"></div>
+
+<script>
+    var element = document.getElementById('chat-element');
+
+    var reactWebChat = new ReactChatUI({
+        url: 'ws://localhost:3000/chat',
+        element: element,
+        workflowID: 1
+    });
+</script>

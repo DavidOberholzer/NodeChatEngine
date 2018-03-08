@@ -2,7 +2,7 @@ module.exports = {
     entry: './reactadmin/index.js',
     output: {
         path: __dirname + '/static/admin/',
-        filename: 'bundle.js',
+        filename: 'admin.js',
         publicPath: '/static/admin/'
     },
     module: {

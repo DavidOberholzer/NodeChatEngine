@@ -1,12 +1,15 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const DBcontroller = require('./db/control');
 const logStyle = require('./constants');
 
 let app = express();
 
-const expressWs = require('express-ws')(app);
+let server = http.createServer(app);
+
+const expressWs = require('express-ws')(app, server);
 
 let db = DBcontroller.getDB();
 DBcontroller.setup();
@@ -55,8 +58,11 @@ app.ws('/chat', (wss, request) => {
     }, 200);
     wss.on('message', message => {
         try {
-            let message_data = JSON.parse(message);
-            DBcontroller.sendMessage(message_data);
+            if (!(message instanceof Object)) {
+                message = JSON.parse(message);
+            }
+            console.log(message);
+            DBcontroller.sendMessage(message);
         } catch (error) {
             console.log(logStyle.FgRed, 'Message format is not JSON.');
             wss.send(
@@ -397,6 +403,6 @@ app.delete(`${apiVer}/buttons/:ID`, (req, res) => {
 
 module.exports = app;
 
-app.listen(3000);
+server.listen(3000);
 
 console.log(logStyle.FgBlue, 'Node Portal Server listening on port 3000...');
