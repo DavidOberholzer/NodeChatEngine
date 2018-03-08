@@ -24,7 +24,7 @@ Now at `localhost:3000/chat` the chatbot engine lives!
 
 ## Chat UI
 
-The Chat UI is hosted at `localhost:3000` and stills needs to be finished. It uses my React-Chat-UI code for this.
+The Chat UI is hosted at `localhost:3000`. This has an instance of my React-Chat-UI creating a websocket connection to the chat engine.
 
 ## Admin
 
@@ -39,3 +39,9 @@ _Workflows_: Workflows consist of many chat states.
 _States_: Chat States are places where the user is at in a chat workflow. It consists of text to be shown to the user, buttons the user can use to move to other states, and an auto field which dictates that once the engine hits that state it will auto direct to a new state asn no input is required.
 
 _Buttons_: Chat buttons are linked to a state and have button text and the state to which they will transition the user.
+
+## TODOs
+
+*   Allow connection to specify workflowID to select the bot you are talking to.
+*   Create User model that will be created upon connection and retained.
+*   User Input (atm buttons are the only input supported.)
