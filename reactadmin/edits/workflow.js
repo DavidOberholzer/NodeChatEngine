@@ -20,11 +20,7 @@ export const WorkflowEdit = props => (
             <DisabledInput source="id" />
             <DisabledInput source="createdat" label="Created" />
             <TextInput source="name" />
-            <ReferenceManyField
-                label="States"
-                reference="states"
-                target="workflowid"
-            >
+            <ReferenceManyField label="States" reference="state" target="workflowid">
                 <Datagrid>
                     <TextField source="id" />
                     <DateField source="createdat" label="Created" />
@@ -33,7 +29,7 @@ export const WorkflowEdit = props => (
                     <ReferenceField
                         source="auto"
                         label="Auto Goto State"
-                        reference="states"
+                        reference="state"
                         allowEmpty
                     >
                         <TextField source="name" />

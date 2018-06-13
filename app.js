@@ -2,6 +2,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const sha256 = require('sha256');
+const util = require('util');
+const uuidv1 = require('uuid/v1');
 const DBcontroller = require('./db/control');
 const logStyle = require('./constants');
 
@@ -12,13 +15,25 @@ let server = http.createServer(app);
 const expressWs = require('express-ws')(app, server);
 
 let db = DBcontroller.getDB();
-DBcontroller.setup();
+
+let tokens = {};
+
+setInterval(() => {
+    let newTokens = tokens;
+    Object.entries(tokens).map(([token, time]) => {
+        const now = new Date();
+        if (now - time > 60000 * 30) {
+            delete newTokens[token];
+        }
+    });
+    tokens = newTokens;
+}, 1000);
 
 app.use(bodyParser.json());
 app.use(express.static('static'));
 
 var corsOptions = {
-    exposedHeaders: 'Content-Range'
+    exposedHeaders: ['Content-Range', 'Token']
 };
 app.use(cors(corsOptions));
 
@@ -42,12 +57,30 @@ app.ws('/echo', (wss, request) => {
 app.ws('/chat', (wss, request) => {
     console.log(logStyle.FgGreen, 'Chat Websocket Connection Established!');
     DBcontroller.connect(1);
+    let inputs = {};
     const receiveMessage = setInterval(() => {
         let messageList = DBcontroller.getMessageBuffer();
         if (messageList.length > 0) {
             console.log(messageList);
         }
         messageList.map((message, index) => {
+            const broken = message.text.split('{{');
+            let newMessage = '';
+            if (broken.length > 1) {
+                broken.map(section => {
+                    const brokenSection = section.split('}}');
+                    if (brokenSection.length > 1) {
+                        const variableName = brokenSection[0].replace(/ /g, '');
+                        newMessage += values[variableName];
+                        newMessage += brokenSection[1];
+                    } else {
+                        newMessage += brokenSection[0];
+                    }
+                });
+            }
+            if (newMessage.length > 0) {
+                message.text = newMessage;
+            }
             wss.send(JSON.stringify(message));
             if (index === messageList.length - 1) {
                 if (message.auto) {
@@ -62,6 +95,9 @@ app.ws('/chat', (wss, request) => {
                 message = JSON.parse(message);
             }
             console.log(message);
+            if (message.input) {
+                inputs[message.input] = message.text;
+            }
             DBcontroller.sendMessage(message);
         } catch (error) {
             console.log(logStyle.FgRed, 'Message format is not JSON.');
@@ -95,6 +131,120 @@ const apiVer = '/api/v1';
 
 // Utils functions for API queries.
 
+const validToken = headers => {
+    const existingTokens = new Set(Object.keys(tokens));
+    const token = headers.authorization;
+    return token && existingTokens.has(token.replace('Bearer ', '')) ? true : false;
+};
+
+const getFlow = (resource, req, res) => {
+    let send = data => {
+        res.header('Content-Range', data.length);
+        res.send(data);
+    };
+    const allowed = validToken(req.headers);
+    if (allowed) {
+        let query = req.query;
+        let filters = query.filter && query.filter !== '{}' ? JSON.parse(`${query.filter}`) : null;
+        let sort = query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
+        let limit = query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
+        getItems(resource, filters, sort, limit)
+            .then(data => send(data.rows))
+            .catch(err => {
+                console.log(err);
+                send(err);
+            });
+    } else {
+        res.statusCode = 403;
+        res.send({ status: 403, message: 'Token Expired!' });
+    }
+};
+
+const getSingleFlow = (resource, req, res) => {
+    const allowed = validToken(req.headers);
+    if (allowed) {
+        let id = req.params.ID;
+        let send = data => res.send(data);
+        getItems(resource, { id: id })
+            .then(data => send(data.rows[0]))
+            .catch(err => {
+                console.log(err);
+                send(err);
+            });
+    } else {
+        res.statusCode = 403;
+        res.send({ status: 403, message: 'Token Expired!' });
+    }
+};
+
+const postNewFlow = (resource, req, res) => {
+    const allowed = validToken(req.headers);
+    if (allowed) {
+        if (req.body) {
+            let send = data => res.send(data);
+            createItem(resource, req.body)
+                .then(data => {
+                    getItems(resource, { id: req.body.id })
+                        .then(data => send(data.rows[0]))
+                        .catch(err => {
+                            console.log(err);
+                            send(err);
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            res.send({ code: 400, message: 'No Body found' });
+        }
+    } else {
+        res.statusCode = 403;
+        res.send({ status: 403, message: 'Token Expired!' });
+    }
+};
+
+const updateFlow = (resource, req, res) => {
+    const allowed = validToken(req.headers);
+    if (allowed) {
+        if (req.body) {
+            let id = req.params.ID;
+            let send = data => res.send(data);
+            updateItem(resource, req.body, id)
+                .then(data => send(data))
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            res.send({ code: 400, message: 'No Body found' });
+        }
+    } else {
+        res.statusCode = 403;
+        res.send({ status: 403, message: 'Token Expired!' });
+    }
+};
+
+const deleteFlow = (resource, req, res) => {
+    const allowed = validToken(req.headers);
+    if (allowed) {
+        let id = req.params.ID;
+        let send = data => res.send(data);
+        deleteItem(resource, id)
+            .then(data => {
+                send({
+                    code: 200,
+                    message: `Successfully removed ${resource} with ID: ${id}`
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                send(err);
+            });
+    } else {
+        res.statusCode = 403;
+        res.send({ status: 403, message: 'Token Expired!' });
+    }
+};
+
 const getItems = (table, filters = null, sort = null, limit = null) => {
     let query = `SELECT * FROM ${table} \n${filters ? `WHERE ` : ''}`;
     // Add all filters to WHERE clause.
@@ -102,10 +252,10 @@ const getItems = (table, filters = null, sort = null, limit = null) => {
         filters = Object.entries(filters);
         filters.map((filter, index) => {
             if (!(filter[1] instanceof Array)) {
-                query += `${filter[0]} = ${filter[1]} AND `;
+                query += `${filter[0]} = '${filter[1]}' AND `;
             } else {
                 filter[1].map(value => {
-                    query += `${filter[0]} = ${value} OR `;
+                    query += `${filter[0]} = '${value}' OR `;
                 });
             }
             if (index === filters.length - 1) {
@@ -154,251 +304,124 @@ const deleteItem = (table, id) => {
 
 // Actual API endpoints.
 
-app.get(`${apiVer}/workflows`, (req, res) => {
-    let query = req.query;
-    let filters =
-        query.filter && query.filter !== '{}'
-            ? JSON.parse(`${query.filter}`)
-            : null;
-    let sort =
-        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
-    let limit =
-        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
-    let send = data => {
-        res.header('Content-Range', data.length);
-        res.send(data);
+app.post(`/authenticate`, (req, res) => {
+    let sendSuccess = code => {
+        let newToken = uuidv1();
+        tokens[newToken] = new Date();
+        res.statusCode = code;
+        res.header('Content-Type', 'application/json');
+        res.send({ token: newToken });
     };
-    getItems('workflow', filters, sort, limit)
-        .then(data => send(data.rows))
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
-});
-
-app.get(`${apiVer}/workflows/:ID`, (req, res) => {
-    let workflowID = req.params.ID;
-    let send = data => res.send(data);
-    getItems('workflow', { id: workflowID })
-        .then(data => send(data.rows[0]))
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
-});
-
-app.post(`${apiVer}/workflows`, (req, res) => {
-    if (req.body) {
-        let send = data => res.send(data);
-        createItem('workflow', req.body)
-            .then(data => {
-                getItems('workflow', { id: req.body.id })
-                    .then(data => send(data.rows[0]))
-                    .catch(err => {
-                        console.log(err);
-                        send(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        res.send({ code: 400, message: 'No Body found' });
-    }
-});
-
-app.put(`${apiVer}/workflows/:ID`, (req, res) => {
-    if (req.body) {
-        let workflowID = req.params.ID;
-        let send = data => res.send(data);
-        updateItem('workflow', req.body, workflowID)
-            .then(data => send(data))
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        res.send({ code: 400, message: 'No Body found' });
-    }
-});
-
-app.delete(`${apiVer}/workflows/:ID`, (req, res) => {
-    let workflowID = req.params.ID;
-    let send = data => res.send(data);
-    deleteItem('workflow', workflowID)
-        .then(data => {
-            send({
-                code: 200,
-                message: `Successfully removed workflow ID: ${workflowID}`
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
-});
-
-app.get(`${apiVer}/states`, (req, res) => {
-    let query = req.query;
-    let filters =
-        query.filter && query.filter !== '{}'
-            ? JSON.parse(`${query.filter}`)
-            : null;
-    let sort =
-        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
-    let limit =
-        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
-    let send = data => {
-        res.header('Content-Range', data.length);
-        res.send(data);
+    let sendFailure = (code, message) => {
+        res.statusCode = code;
+        res.send({ status: code, message });
     };
-    getItems('state', filters, sort, limit)
-        .then(data => send(data.rows))
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
-});
-
-app.get(`${apiVer}/states/:ID`, (req, res) => {
-    let stateID = req.params.ID;
-    let send = data => res.send(data);
-    getItems('state', { id: stateID })
-        .then(data => send(data.rows[0]))
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
-});
-
-app.post(`${apiVer}/states`, (req, res) => {
     if (req.body) {
-        let send = data => res.send(data);
-        createItem('state', req.body)
-            .then(data => {
-                getItems('state', { id: req.body.id })
-                    .then(data => send(data.rows[0]))
-                    .catch(err => {
-                        console.log(err);
-                        send(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if (req.body.username && req.body.password) {
+            getItems('member', { username: req.body.username })
+                .then(data => {
+                    if (data.rows.length > 0) {
+                        data = data.rows[0];
+                        let password = sha256(req.body.password);
+                        if (password == data.password) {
+                            sendSuccess(200, 'Success');
+                        } else {
+                            sendFailure(403, 'Incorrect Login Details');
+                        }
+                    } else {
+                        sendFailure(403, 'User not found.');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    sendFailure(403, err);
+                });
+        } else {
+            sendFailure(403, err);
+        }
     } else {
-        res.send({ code: 400, message: 'No Body found' });
+        sendFailure(403, err);
     }
 });
 
-app.put(`${apiVer}/states/:ID`, (req, res) => {
-    if (req.body) {
-        let stateID = req.params.ID;
-        let send = data => res.send(data);
-        updateItem('state', req.body, stateID)
-            .then(data => send(data))
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        res.send({ code: 400, message: 'No Body found' });
-    }
+app.get(`${apiVer}/user`, (req, res) => {
+    getFlow('user', req, res);
 });
 
-app.delete(`${apiVer}/states/:ID`, (req, res) => {
-    let stateID = req.params.ID;
-    let send = data => res.send(data);
-    deleteItem('state', stateID)
-        .then(data => {
-            send({
-                code: 200,
-                message: `Successfully removed state ID: ${stateID}`
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
+app.get(`${apiVer}/user/:ID`, (req, res) => {
+    getSingleFlow('user', req, res);
 });
 
-app.get(`${apiVer}/buttons`, (req, res) => {
-    let query = req.query;
-    let filters =
-        query.filter && query.filter !== '{}'
-            ? JSON.parse(`${query.filter}`)
-            : null;
-    let sort =
-        query.sort && query.sort !== '[]' ? JSON.parse(query.sort) : null;
-    let limit =
-        query.range && query.range !== '[]' ? JSON.parse(query.range)[1] : null;
-    let send = data => {
-        res.header('Content-Range', data.length);
-        res.send(data);
-    };
-    getItems('button', filters, sort, limit)
-        .then(data => send(data.rows))
-        .catch(err => {
-            console.log(err);
-        });
+app.post(`${apiVer}/user`, (req, res) => {
+    postNewFlow('user', req, res);
 });
 
-app.get(`${apiVer}/buttons/:ID`, (req, res) => {
-    let buttonID = req.params.ID;
-    let send = data => res.send(data);
-    getItems('button', { id: buttonID })
-        .then(data => send(data.rows[0]))
-        .catch(err => {
-            console.log(err);
-        });
+app.put(`${apiVer}/user/:ID`, (req, res) => {
+    updateFlow('user', req, res);
 });
 
-app.post(`${apiVer}/buttons`, (req, res) => {
-    if (req.body) {
-        let send = data => res.send(data);
-        createItem('button', req.body)
-            .then(data => {
-                getItems('button', { id: req.body.id })
-                    .then(data => send(data.rows[0]))
-                    .catch(err => {
-                        console.log(err);
-                        send(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        res.send({ code: 400, message: 'No Body found' });
-    }
+app.delete(`${apiVer}/user/:ID`, (req, res) => {
+    deleteFlow('user', req, res);
 });
 
-app.put(`${apiVer}/buttons/:ID`, (req, res) => {
-    if (req.body) {
-        let buttonID = req.params.ID;
-        let send = data => res.send(data);
-        updateItem('button', req.body, buttonID)
-            .then(data => send(data))
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        res.send({ code: 400, message: 'No Body found' });
-    }
+app.get(`${apiVer}/workflow`, (req, res) => {
+    getFlow('workflow', req, res);
 });
 
-app.delete(`${apiVer}/buttons/:ID`, (req, res) => {
-    let butotnID = req.params.ID;
-    let send = data => res.send(data);
-    deleteItem('button', buttonID)
-        .then(data => {
-            send({
-                code: 200,
-                message: `Successfully removed button ID: ${buttonID}`
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            send(err);
-        });
+app.get(`${apiVer}/workflow/:ID`, (req, res) => {
+    getSingleFlow('workflow', req, res);
+});
+
+app.post(`${apiVer}/workflow`, (req, res) => {
+    postNewFlow('workflow', req, res);
+});
+
+app.put(`${apiVer}/workflow/:ID`, (req, res) => {
+    updateFlow('workflow', req, res);
+});
+
+app.delete(`${apiVer}/workflow/:ID`, (req, res) => {
+    deleteFlow('workflow', req, res);
+});
+
+app.get(`${apiVer}/state`, (req, res) => {
+    getFlow('state', req, res);
+});
+
+app.get(`${apiVer}/state/:ID`, (req, res) => {
+    getSingleFlow('state', req, res);
+});
+
+app.post(`${apiVer}/state`, (req, res) => {
+    postNewFlow('state', req, res);
+});
+
+app.put(`${apiVer}/state/:ID`, (req, res) => {
+    updateFlow('state', req, res);
+});
+
+app.delete(`${apiVer}/state/:ID`, (req, res) => {
+    deleteFlow('state', req, res);
+});
+
+app.get(`${apiVer}/button`, (req, res) => {
+    getFlow('button', req, res);
+});
+
+app.get(`${apiVer}/button/:ID`, (req, res) => {
+    getSingleFlow('button', req, res);
+});
+
+app.post(`${apiVer}/button`, (req, res) => {
+    postNewFlow('button', req, res);
+});
+
+app.put(`${apiVer}/button/:ID`, (req, res) => {
+    updateFlow('button', req, res);
+});
+
+app.delete(`${apiVer}/button/:ID`, (req, res) => {
+    deleteFlow('button', req, res);
 });
 
 module.exports = app;

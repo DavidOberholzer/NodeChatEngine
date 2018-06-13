@@ -15,20 +15,12 @@ export const StateList = props => (
             <TextField source="id" />
             <DateField source="createdat" label="Created" />
             <TextField source="name" />
+            <TextField source="input" />
             <BooleanField source="startstate" label="Is Start State" />
-            <ReferenceField
-                source="auto"
-                label="Auto Goto State"
-                reference="states"
-                allowEmpty
-            >
+            <ReferenceField source="auto" label="Auto Goto State" reference="state" allowEmpty>
                 <TextField source="name" />
             </ReferenceField>
-            <ReferenceField
-                source="workflowid"
-                label="workflow"
-                reference="workflows"
-            >
+            <ReferenceField source="workflowid" label="workflow" reference="workflow">
                 <TextField source="name" />
             </ReferenceField>
             <EditButton />

@@ -32,7 +32,7 @@ export const ButtonCreate = props => (
             <ReferenceInput
                 source="goto"
                 label="Goto State"
-                reference="states"
+                reference="state"
                 allowEmpty
             >
                 <SelectInput source="id" optionText="name" />
@@ -40,7 +40,7 @@ export const ButtonCreate = props => (
             <ReferenceInput
                 source="stateid"
                 label="State"
-                reference="states"
+                reference="state"
                 allowEmpty
             >
                 <SelectInput source="id" optionText="name" />

@@ -15,12 +15,7 @@ export const ButtonEdit = props => (
             <DisabledInput source="id" />
             <DisabledInput source="createdat" label="Created" />
             <TextInput source="text" />
-            <ReferenceInput
-                source="goto"
-                label="Goto State"
-                reference="states"
-                allowEmpty
-            >
+            <ReferenceInput source="goto" label="Goto State" reference="state" allowEmpty>
                 <SelectInput source="id" optionText="name" />
             </ReferenceInput>
         </SimpleForm>

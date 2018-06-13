@@ -1,6 +1,6 @@
 const utils = require('./utils');
 const logStyle = require('../constants');
-const functions = require('../app');
+const sha256 = require('sha256');
 
 const client = require('./client');
 
@@ -32,6 +32,7 @@ module.exports = {
                     field[1].type +
                     (field[1].required ? ' NOT NULL' : '') +
                     (field[1].default ? ' DEFAULT ' + field[1].default : '') +
+                    (field[1].unique ? ' UNIQUE' : '') +
                     ',\n';
                 if (primaryKey === '' && field[1].primaryKey) {
                     primaryKey = '\tPRIMARY KEY (' + field[0] + ')';
@@ -50,19 +51,27 @@ module.exports = {
                 (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') +
                 ');';
             // Debugging console logs
-            // console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
-            // console.log(queryString);
+            console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
+            console.log(queryString);
             db
                 .query(queryString)
                 .then(res => {
                     // Debugging console logs
-                    // console.log(
-                    //     logStyle.FgGreen,
-                    //     'SUCCESS: Created table ' + table[0]
-                    // );
+                    console.log(
+                        logStyle.FgGreen,
+                        'SUCCESS: Created table ' + table[0]
+                    );
                 })
                 .catch(e => console.log(logStyle.FgRed, e));
         });
+        let password = sha256('admin');
+        // loadTableData('member', [
+        //     {
+        //         username: 'admin',
+        //         password: password,
+        //         email: 'davidoberholzertest@gmail.com'
+        //     }
+        // ]);
     },
     connect: workflowID => {
         let query =
@@ -87,6 +96,42 @@ module.exports = {
         messageBuffer = [];
         return messages;
     }
+};
+
+const stateQuery = (query, successMessage) => {
+    db
+        .query(query)
+        .then(res => {
+            console.log(logStyle.FgGreen, successMessage);
+            buttonQuery(res.rows[0]);
+        })
+        .catch(e => {
+            console.log(e);
+            let result = {};
+            result['text'] = 'Something went wrong! Please try again later.';
+            addToMessageBuffer(result);
+        });
+};
+
+const buttonQuery = state => {
+    const query = 'SELECT * FROM button WHERE stateid=' + state.id + ';';
+    const appendButtons = buttons => {
+        state['buttons'] = buttons;
+        addToMessageBuffer(state);
+    };
+    db
+        .query(query)
+        .then(res => {
+            appendButtons(res.rows);
+        })
+        .catch(e => {
+            console.log(e);
+            appendButtons([]);
+        });
+};
+
+const addToMessageBuffer = message => {
+    messageBuffer.push(message);
 };
 
 /* Depricated code loading of json file data into tables. */
@@ -127,40 +172,4 @@ const loadData = () => {
     });
 };
 
-const stateQuery = (query, successMessage) => {
-    db
-        .query(query)
-        .then(res => {
-            console.log(logStyle.FgGreen, successMessage);
-            buttonQuery(res.rows[0]);
-        })
-        .catch(e => {
-            console.log(e);
-            let result = {};
-            result['text'] = 'Something went wrong! Please try again later.';
-            addToMessageBuffer(result);
-        });
-};
-
-const buttonQuery = state => {
-    const query = 'SELECT * FROM button WHERE stateid=' + state.id + ';';
-    const appendButtons = buttons => {
-        state['buttons'] = buttons;
-        addToMessageBuffer(state);
-    };
-    db
-        .query(query)
-        .then(res => {
-            appendButtons(res.rows);
-        })
-        .catch(e => {
-            console.log(e);
-            appendButtons([]);
-        });
-};
-
 /* End of depricated code */
-
-const addToMessageBuffer = message => {
-    messageBuffer.push(message);
-};

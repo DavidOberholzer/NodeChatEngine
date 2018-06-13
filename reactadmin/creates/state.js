@@ -32,22 +32,18 @@ export const StateCreate = props => (
             <TextInput source="id" />
             <TextInput source="name" />
             <LongTextInput source="text" />
+            <TextInput source="input" />
             <BooleanInput source="startstate" label="Is Start State" />
             <ReferenceInput
                 source="auto"
                 label="Auto Goto State"
-                reference="states"
+                reference="state"
                 target="workflowid"
                 allowEmpty
             >
                 <SelectInput source="id" optionText="name" />
             </ReferenceInput>
-            <ReferenceInput
-                source="workflowid"
-                label="Workflow"
-                reference="workflows"
-                allowEmpty
-            >
+            <ReferenceInput source="workflowid" label="Workflow" reference="workflow" allowEmpty>
                 <SelectInput source="id" optionText="name" />
             </ReferenceInput>
         </SimpleForm>

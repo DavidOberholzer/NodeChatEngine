@@ -27,7 +27,9 @@
     "material-ui": "^0.20.0",
     "pg": "^7.4.1",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "sha256": "^0.2.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

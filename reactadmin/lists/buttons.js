@@ -15,10 +15,10 @@ export const ButtonList = props => (
             <TextField source="id" />
             <DateField source="createdat" label="Created" />
             <TextField source="text" />
-            <ReferenceField source="goto" reference="states" allowEmpty={true}>
+            <ReferenceField source="goto" reference="state" allowEmpty={true}>
                 <TextField source="name" />
             </ReferenceField>
-            <ReferenceField source="stateid" reference="states">
+            <ReferenceField source="stateid" reference="state">
                 <TextField source="name" />
             </ReferenceField>
             <EditButton />

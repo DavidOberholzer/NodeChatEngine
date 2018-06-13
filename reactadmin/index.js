@@ -3,6 +3,8 @@ import { render } from 'react-dom';
 import { simpleRestClient, Admin, Resource } from 'admin-on-rest';
 import customTheme from './theme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import authClient from './authClient';
+import restClient from './restClient';
 
 import { ButtonList } from './lists/buttons';
 import { StateList } from './lists/states';
@@ -29,24 +31,25 @@ document.getElementById('Admin') &&
                 </div>
             }
             theme={getMuiTheme(customTheme)}
-            restClient={simpleRestClient('http://localhost:3000/api/v1')}
+            authClient={authClient}
+            restClient={restClient}
         >
             <Resource
-                name="workflows"
+                name="workflow"
                 list={WorkflowList}
                 create={WorkflowCreate}
                 edit={WorkflowEdit}
                 remove={Delete}
             />
             <Resource
-                name="states"
+                name="state"
                 list={StateList}
                 create={StateCreate}
                 edit={StateEdit}
                 remove={Delete}
             />
             <Resource
-                name="buttons"
+                name="button"
                 list={ButtonList}
                 create={ButtonCreate}
                 edit={ButtonEdit}
