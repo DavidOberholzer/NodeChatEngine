@@ -1,0 +1,6 @@
+export const AUTH_LOGIN = 'AUTH_LOGIN';
+export const AUTH_LOGOUT = 'AUTH_LOGOUT';
+
+export const CHAT_WORKFLOW_CHANGE = 'CHAT_WORKFLOW_CHANGE';
+
+export const MESSAGE_ADD = 'MESSAGE_ADD';

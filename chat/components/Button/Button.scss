@@ -1,0 +1,22 @@
+.Button {
+    padding: $button-padding;
+    display: block;
+    border: none;
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    width: 100%;
+    transition: 0.25s;
+    &:hover {
+        transform: translateY(-0.25em);
+    }
+    &--plain {
+        background-color: $plain-button-color;
+    }
+    &--disabled {
+        background-color: $disabled-color;
+        color: $disabled-text-color;
+    }
+}

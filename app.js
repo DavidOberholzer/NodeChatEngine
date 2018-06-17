@@ -5,8 +5,10 @@ const http = require('http');
 const sha256 = require('sha256');
 const util = require('util');
 const uuidv1 = require('uuid/v1');
+
 const DBcontroller = require('./db/control');
 const logStyle = require('./constants');
+const utils = require('./utils');
 
 let app = express();
 
@@ -56,34 +58,15 @@ app.ws('/echo', (wss, request) => {
 
 app.ws('/chat', (wss, request) => {
     console.log(logStyle.FgGreen, 'Chat Websocket Connection Established!');
-    DBcontroller.connect(1);
     let inputs = {};
+    let firstMessage = true;
     const receiveMessage = setInterval(() => {
         let messageList = DBcontroller.getMessageBuffer();
-        if (messageList.length > 0) {
-            console.log(messageList);
-        }
         messageList.map((message, index) => {
-            const broken = message.text.split('{{');
-            let newMessage = '';
-            if (broken.length > 1) {
-                broken.map(section => {
-                    const brokenSection = section.split('}}');
-                    if (brokenSection.length > 1) {
-                        const variableName = brokenSection[0].replace(/ /g, '');
-                        newMessage += values[variableName];
-                        newMessage += brokenSection[1];
-                    } else {
-                        newMessage += brokenSection[0];
-                    }
-                });
-            }
-            if (newMessage.length > 0) {
-                message.text = newMessage;
-            }
+            message = utils.loadVariables(message, inputs);
             wss.send(JSON.stringify(message));
             if (index === messageList.length - 1) {
-                if (message.auto) {
+                if (message.auto && !message.input) {
                     DBcontroller.sendMessage({ goto: message.auto });
                 }
             }
@@ -94,11 +77,15 @@ app.ws('/chat', (wss, request) => {
             if (!(message instanceof Object)) {
                 message = JSON.parse(message);
             }
-            console.log(message);
-            if (message.input) {
-                inputs[message.input] = message.text;
+            if (firstMessage) {
+                firstMessage = false;
+                DBcontroller.connect(message.workflowID);
+            } else {
+                if (message.input) {
+                    inputs[message.input] = message.text;
+                }
+                DBcontroller.sendMessage(message);
             }
-            DBcontroller.sendMessage(message);
         } catch (error) {
             console.log(logStyle.FgRed, 'Message format is not JSON.');
             wss.send(

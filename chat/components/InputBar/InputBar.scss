@@ -1,0 +1,15 @@
+.InputBar {
+	width: 100%;
+	&--input {
+		width: 100%;
+		box-sizing: border-box;
+		border: 0px;
+		border-bottom: 2px solid #c8c4c4;
+		background: none;
+		margin-top: 10%;
+		transition: 500ms;
+		&:focus {
+			border-bottom: 2px solid #000000;
+		}
+	}
+}

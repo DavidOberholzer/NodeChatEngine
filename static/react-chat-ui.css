@@ -23,6 +23,18 @@ html {
     background-color: #d6d6d6;
     color: gainsboro; }
 
+.message-enter {
+  opacity: 0.01; }
+  .message-enter.message-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-in; }
+
+.message-leave {
+  opacity: 1; }
+  .message-leave.message-leave-active {
+    opacity: 0.01;
+    transition: opacity 0s ease-in; }
+
 .InputBar {
   width: 100%; }
   .InputBar--input {
@@ -53,8 +65,7 @@ html {
     border: 2px solid cornflowerblue;
     border-bottom-right-radius: 0px; }
   .Message--old {
-    background-color: #d6d6d6;
-    border: 0px; }
+    background-color: #d6d6d6; }
 
 .MessageContainer {
   display: flex;

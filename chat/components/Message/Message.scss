@@ -1,0 +1,23 @@
+.Message {
+    padding: $message-padding;
+    display: inline-block;
+    color: $text-color;
+    border: none;
+    border-radius: 10px;
+    margin: 2%;
+    transition: 0.5s;
+    
+    &--user {
+        background: #939191;
+        color: white;
+        border: 2px solid #939191;
+        border-bottom-left-radius: 0px;
+    }
+    &--remote {
+        border: 2px solid cornflowerblue;
+        border-bottom-right-radius: 0px;
+    }
+    &--old {
+        background-color: $disabled-color;
+    }
+}
