@@ -22,12 +22,12 @@ class Button extends Component {
     }
 
     render() {
-        const { modifiers, type, onClick, children } = this.props;
+        const { modifiers, type, children, customOnClick } = this.props;
         return (
             <button
                 className={`Button ${modifiers ? modifiers : ''}`}
                 type={type}
-                onClick={this.handleClick}
+                onClick={customOnClick ? customOnClick : this.handleClick}
             >
                 {children}
             </button>
@@ -36,7 +36,8 @@ class Button extends Component {
 }
 Button.propTypes = {
     modifiers: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    customOnClick: PropTypes.func
 };
 
 export default connect(

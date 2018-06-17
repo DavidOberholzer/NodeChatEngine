@@ -7,8 +7,6 @@ const getWebSocketClient = (url, receiveHandler) => {
             console.log('WebSocket connection opened!');
         };
         webSocket.onmessage = event => {
-            console.log('Message Received');
-            console.log(event.data);
             receiveHandler(JSON.parse(event.data));
         };
         webSocket.onclose = () => {

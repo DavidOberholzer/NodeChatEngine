@@ -81,10 +81,14 @@ app.ws('/chat', (wss, request) => {
                 firstMessage = false;
                 DBcontroller.connect(message.workflowID);
             } else {
-                if (message.input) {
-                    inputs[message.input] = message.text;
+                if (message.text === '!reset') {
+                    firstMessage = true;
+                } else {
+                    if (message.input) {
+                        inputs[message.input] = message.text;
+                    }
+                    DBcontroller.sendMessage(message);
                 }
-                DBcontroller.sendMessage(message);
             }
         } catch (error) {
             console.log(logStyle.FgRed, 'Message format is not JSON.');
@@ -409,6 +413,10 @@ app.put(`${apiVer}/button/:ID`, (req, res) => {
 
 app.delete(`${apiVer}/button/:ID`, (req, res) => {
     deleteFlow('button', req, res);
+});
+
+app.get('*', (req, res) => {
+    res.redirect('/');
 });
 
 module.exports = app;

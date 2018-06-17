@@ -9,8 +9,14 @@ export const createStoreWithInitial = initialState =>
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     );
 
+const idToken = localStorage.getItem('token');
+
 export default createStore(
     reducers,
-    {},
+    {
+        auth: {
+            idToken
+        }
+    },
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );

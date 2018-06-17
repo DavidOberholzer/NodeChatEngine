@@ -7,14 +7,18 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 
+import api from '../../utils/api';
 import { login } from '../../actions/auth';
+import { chatWorkflowsLoad } from '../../actions/chat';
 
 const mapStateToProps = state => ({
-    idToken: state.auth.idToken
+    idToken: state.auth.idToken,
+    workflows: state.chat.workflows
 });
 
 const mapDispatchToProps = dispatch => ({
-    login: idToken => dispatch(login(idToken))
+    login: idToken => dispatch(login(idToken)),
+    chatWorkflowsLoad: workflows => dispatch(chatWorkflowsLoad(workflows))
 });
 
 class Login extends Component {
@@ -43,7 +47,7 @@ class Login extends Component {
     }
     handleSubmit() {
         const { username, password } = this.state;
-        const { login } = this.props;
+        const { login, chatWorkflowsLoad } = this.props;
         if (username.length === 0) {
             this.setState({ username: { value: username.value, error: 'Username required!' } });
             return;
@@ -51,26 +55,19 @@ class Login extends Component {
             this.setState({ password: { value: password.value, error: 'Password required!' } });
             return;
         }
-        const request = new Request('http://localhost:3000/authenticate', {
-            method: 'POST',
-            body: JSON.stringify({ username: username.value, password: password.value }),
-            headers: new Headers({ 'Content-Type': 'application/json' })
-        });
-        fetch(request)
-            .then(response => {
-                if (response.status < 200 || response.status >= 300) {
-                    throw new Error(response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                login(data.token);
+        api.auth(username.value, password.value).then(data => {
+            const token = data.token;
+            login(token);
+            localStorage.setItem('token', token);
+            api.workflows(token).then(data => {
+                chatWorkflowsLoad(data);
                 this.setState({
-                    idToken: data.token,
+                    idToken: token,
                     username: { value: '', error: null },
                     password: { value: '', error: null }
                 });
             });
+        });
     }
     render() {
         const { username, password, idToken } = this.state;

@@ -1,4 +1,4 @@
-import { MESSAGE_ADD } from '../actionTypes';
+import { MESSAGE_ADD, MESSAGE_CLEAR_ALL } from '../actionTypes';
 
 const initialState = {
     messages: []
@@ -8,7 +8,6 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case MESSAGE_ADD:
             return {
-                ...state,
                 messages: [
                     ...state.messages,
                     {
@@ -16,6 +15,10 @@ export default (state = initialState, action) => {
                         timeAdded: Date.now()
                     }
                 ]
+            };
+        case MESSAGE_CLEAR_ALL:
+            return {
+                messages: []
             };
         default:
             return state;

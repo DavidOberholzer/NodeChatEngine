@@ -1,15 +1,15 @@
 .message-enter {
-	opacity: 0.01;
-	&.message-enter-active {
-		opacity: 1;
-		transition: opacity 200ms ease-in;
-	}
+    opacity: 0.01;
+    &.message-enter-active {
+        opacity: 1;
+        transition: opacity 200ms ease-in;
+    }
 }
 
 .message-leave {
-	opacity: 1;
-	&.message-leave-active {
-		opacity: 0.01;
-		transition: opacity 0s ease-in;
-	}
+    opacity: 1;
+    &.message-leave-active {
+        opacity: 0.01;
+        transition: opacity 0s ease-in;
+    }
 }

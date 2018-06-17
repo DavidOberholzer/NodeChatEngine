@@ -22,6 +22,13 @@ html {
   .Button--disabled {
     background-color: #d6d6d6;
     color: gainsboro; }
+  .Button--back {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 5%;
+    border-radius: 10px;
+    background-color: #e6677b; }
 
 .Chat--dropdown {
   display: flex;

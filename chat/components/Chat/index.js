@@ -8,17 +8,24 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 
+import api from '../../utils/api';
 import store from '../../store';
 import ChatContainer from '../ChatContainer';
-import { chatChangeWorkflow } from '../../actions/chat';
+import LocalButton from '../Button';
+import { chatChangeWorkflow, chatWorkflowsLoad } from '../../actions/chat';
 import WebSocket from '../../utils/client';
+import { messageClearAll } from '../../actions/messages';
 
 const mapDispatchToProps = dispatch => ({
-    chatChangeWorkflow: workflowID => dispatch(chatChangeWorkflow(workflowID))
+    chatWorkflowsLoad: workflows => dispatch(chatWorkflowsLoad(workflows)),
+    chatChangeWorkflow: workflowID => dispatch(chatChangeWorkflow(workflowID)),
+    messageClearAll: () => dispatch(messageClearAll())
 });
 
 const mapStateToProps = state => ({
-    idToken: state.auth.idToken
+    idToken: state.auth.idToken,
+    workflows: state.chat.workflows,
+    workflowID: state.chat.workflowID
 });
 
 class Chat extends Component {
@@ -26,33 +33,32 @@ class Chat extends Component {
         super(props);
         this.state = {
             authorised: !!props.idToken,
-            workflows: null,
+            workflows: props.workflows,
             anchorEl: null,
-            selection: null
+            selection: props.workflowID
         };
         this.getWorkflows = this.getWorkflows.bind(this);
-        this.getWorkflows();
+        this.handleBack = this.handleBack.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
     getWorkflows() {
-        const request = new Request('http://localhost:3000/api/v1/workflow', {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${this.props.idToken}`
-            }
-        });
-        fetch(request)
-            .then(response => {
-                console.log(response);
-                return response.json();
-            })
+        api.workflows(this.props.idToken)
             .then(data => {
+                this.props.chatWorkflowsLoad(data);
                 this.setState({ workflows: data });
             })
             .catch(error => {
+                localStorage.removeItem('token');
+                this.setState({ authorised: false });
                 console.error(error);
             });
+    }
+    handleBack(event) {
+        WebSocket().send(JSON.stringify({ text: '!reset' }));
+        this.props.messageClearAll();
+        this.props.chatChangeWorkflow(null);
+        this.setState({ selection: null });
     }
     handleClick(event) {
         this.setState({ anchorEl: event.currentTarget });
@@ -63,6 +69,9 @@ class Chat extends Component {
     }
     render() {
         const { authorised, workflows, anchorEl, selection } = this.state;
+        if (!workflows) {
+            this.getWorkflows();
+        }
         return authorised ? (
             !selection ? (
                 workflows ? (
@@ -71,6 +80,8 @@ class Chat extends Component {
                             aria-owns={anchorEl ? 'simple-menu' : null}
                             aria-haspopup="true"
                             onClick={this.handleClick}
+                            variant="contained"
+                            color="primary"
                         >
                             Choose Workflow
                         </Button>
@@ -94,7 +105,12 @@ class Chat extends Component {
                     <CircularProgress style={{ color: purple[500] }} thickness={7} />
                 )
             ) : (
-                <ChatContainer />
+                <div>
+                    <LocalButton modifiers="Button--back" customOnClick={this.handleBack}>
+                        Back
+                    </LocalButton>
+                    <ChatContainer />
+                </div>
             )
         ) : (
             <Redirect push to="/" />

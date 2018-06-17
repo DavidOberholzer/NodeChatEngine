@@ -19,4 +19,12 @@
         background-color: $disabled-color;
         color: $disabled-text-color;
     }
+    &--back {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        width: 5%;
+        border-radius: 10px;
+        background-color: rgb(230, 103, 123);
+    }
 }
