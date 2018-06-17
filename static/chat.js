@@ -8302,8 +8302,9 @@ exports['default'] = _Symbol;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
+exports.createStoreWithInitial = undefined;
 
 var _redux = __webpack_require__(66);
 
@@ -8312,6 +8313,10 @@ var _reducers = __webpack_require__(197);
 var _reducers2 = _interopRequireDefault(_reducers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var createStoreWithInitial = exports.createStoreWithInitial = function createStoreWithInitial(initialState) {
+    return (0, _redux.createStore)(_reducers2['default'], initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+};
 
 exports['default'] = (0, _redux.createStore)(_reducers2['default'], {}, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
@@ -24116,7 +24121,7 @@ var Chat = function (_Component) {
 
             return authorised ? !selection ? workflows ? _react2['default'].createElement(
                 'div',
-                null,
+                { className: 'Chat Chat--dropdown' },
                 _react2['default'].createElement(
                     _Button2['default'],
                     {
@@ -34547,7 +34552,9 @@ var ChatContainer = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ChatContainer.__proto__ || Object.getPrototypeOf(ChatContainer)).call(this, props));
 
-        (0, _client2['default'])().send(JSON.stringify({ workflowID: _this.props.workflowID }));
+        if (!props.styleDebugMode) {
+            (0, _client2['default'])().send(JSON.stringify({ workflowID: _this.props.workflowID }));
+        }
         return _this;
     }
 
@@ -34604,7 +34611,12 @@ var ChatContainer = function (_React$Component) {
 }(_react2['default'].Component);
 
 ChatContainer.propTypes = {
-    messages: _propTypes2['default'].array
+    messages: _propTypes2['default'].array,
+    styleDebugMode: _propTypes2['default'].bool
+};
+
+ChatContainer.defaultProps = {
+    styleDebugMode: false
 };
 
 exports['default'] = (0, _reactRedux.connect)(mapStateToProps, null)(ChatContainer);
@@ -36061,10 +36073,10 @@ var Login = function (_Component) {
 
             return idToken ? _react2['default'].createElement(_reactRouter.Redirect, { push: true, to: '/chat-space' }) : _react2['default'].createElement(
                 _Card2['default'],
-                null,
+                { classes: { root: 'Login Login--card' } },
                 _react2['default'].createElement(
                     _CardContent2['default'],
-                    { component: 'h1' },
+                    { component: 'h1', classes: { root: 'Login Login--title' } },
                     'Login'
                 ),
                 _react2['default'].createElement(
@@ -36078,7 +36090,11 @@ var Login = function (_Component) {
                         onChange: this.handleChangeUsername,
                         value: username.value,
                         helperText: username.error
-                    }),
+                    })
+                ),
+                _react2['default'].createElement(
+                    _CardContent2['default'],
+                    { component: 'div' },
                     _react2['default'].createElement(_TextField2['default'], {
                         id: 'password-input',
                         label: 'Password',
@@ -36094,7 +36110,7 @@ var Login = function (_Component) {
                     null,
                     _react2['default'].createElement(
                         _Button2['default'],
-                        { size: 'small', color: 'primary', onClick: this.handleSubmit },
+                        { variant: 'contained', color: 'primary', onClick: this.handleSubmit },
                         'Login'
                     )
                 )

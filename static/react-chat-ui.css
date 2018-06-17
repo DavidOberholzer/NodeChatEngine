@@ -23,6 +23,14 @@ html {
     background-color: #d6d6d6;
     color: gainsboro; }
 
+.Chat--dropdown {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50%;
+  margin-bottom: 40%; }
+
 .message-enter {
   opacity: 0.01; }
   .message-enter.message-enter-active {
@@ -47,6 +55,15 @@ html {
     transition: 500ms; }
     .InputBar--input:focus {
       border-bottom: 2px solid #000000; }
+
+.Login--title {
+  margin-bottom: 0; }
+
+.Login--card {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 100px; }
 
 .Message {
   padding: 0.75rem;

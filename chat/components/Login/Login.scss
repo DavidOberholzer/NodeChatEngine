@@ -1,0 +1,11 @@
+.Login {
+    &--title {
+        margin-bottom: 0;
+    }
+    &--card {
+        align-items: center;
+        display: flex;
+		flex-direction: column;
+		margin: 100px;
+    }
+}

@@ -77,8 +77,10 @@ class Login extends Component {
         return idToken ? (
             <Redirect push to="/chat-space" />
         ) : (
-            <Card>
-                <CardContent component="h1">Login</CardContent>
+            <Card classes={{ root: 'Login Login--card' }}>
+                <CardContent component="h1" classes={{ root: 'Login Login--title' }}>
+                    Login
+                </CardContent>
                 <CardContent component="div">
                     <TextField
                         id="username-input"
@@ -89,6 +91,8 @@ class Login extends Component {
                         value={username.value}
                         helperText={username.error}
                     />
+                </CardContent>
+                <CardContent component="div">
                     <TextField
                         id="password-input"
                         label="Password"
@@ -100,7 +104,7 @@ class Login extends Component {
                     />
                 </CardContent>
                 <CardActions>
-                    <Button size="small" color="primary" onClick={this.handleSubmit}>
+                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                         Login
                     </Button>
                 </CardActions>

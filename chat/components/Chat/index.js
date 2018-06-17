@@ -66,7 +66,7 @@ class Chat extends Component {
         return authorised ? (
             !selection ? (
                 workflows ? (
-                    <div>
+                    <div className="Chat Chat--dropdown">
                         <Button
                             aria-owns={anchorEl ? 'simple-menu' : null}
                             aria-haspopup="true"
