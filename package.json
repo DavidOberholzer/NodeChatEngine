@@ -7,10 +7,12 @@
         "build:admin": "webpack --colors --progress --config admin.config.js",
         "build:chat": "webpack --colors --progress --config chat.config.js",
         "start": "node app",
+        "stop": "pkill --signal SIGINT NodeChatEngine",
         "storybook": "start-storybook -p 9001 -c chat/.storybook",
         "storybook:build": "build-storybook -c chat/.storybook -o react/.out",
         "dbsetup": "NODE_ENV=test node ./db/takedown && NODE_ENV=test node ./db/setup",
         "dbtakedown": "NODE_ENV=test node ./db/takedown",
+        "cypress": "cypress run --headed",
         "test": "yarn dbsetup && NODE_ENV=test nyc mocha --exit test/**.js && yarn dbtakedown"
     },
     "keywords": [

@@ -20,6 +20,8 @@ let db = DBcontroller.getDB();
 
 let tokens = {};
 
+process.title = 'NodeChatEngine';
+
 setInterval(() => {
     let newTokens = tokens;
     Object.entries(tokens).map(([token, time]) => {
