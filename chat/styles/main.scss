@@ -1,6 +1,6 @@
 $button-padding: 0.50rem;
 $message-padding: 0.75rem;
-$background-color: rgb(255, 255, 255);
+$background-color: rgb(183, 247, 255);
 $text-color: rgb(0, 0, 0);
 $disabled-text-color: rgb(220, 220, 220);
 $disabled-color: rgb(214, 214, 214);
@@ -10,8 +10,6 @@ $plain-button-color: rgb(31, 200, 228);
 
 html {
     background-color: $background-color;
-    margin-left: 35%;
-    margin-right: 35%; 
     font-family: 'Courier New', Courier, monospace;
 }
 

@@ -5,12 +5,26 @@
             "username": "admin",
             "password": "admin",
             "email": "test@admin.com"
+        },
+        {
+            "id": 2,
+            "username": "test",
+            "password": "test",
+            "email": "test2@admin.com"
         }
     ],
     "workflow": [
         {
             "id": 1,
             "name": "Test Workflow"
+        },
+        {
+            "id": 2,
+            "name": "A Workflow"
+        },
+        {
+            "id": 5,
+            "name": "another one"
         }
     ],
     "state": [

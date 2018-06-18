@@ -335,24 +335,24 @@ app.post(`/authenticate`, (req, res) => {
     }
 });
 
-app.get(`${apiVer}/user`, (req, res) => {
-    getFlow('user', req, res);
+app.get(`${apiVer}/member`, (req, res) => {
+    getFlow('member', req, res);
 });
 
-app.get(`${apiVer}/user/:ID`, (req, res) => {
-    getSingleFlow('user', req, res);
+app.get(`${apiVer}/member/:ID`, (req, res) => {
+    getSingleFlow('member', req, res);
 });
 
-app.post(`${apiVer}/user`, (req, res) => {
-    postNewFlow('user', req, res);
+app.post(`${apiVer}/member`, (req, res) => {
+    postNewFlow('member', req, res);
 });
 
-app.put(`${apiVer}/user/:ID`, (req, res) => {
-    updateFlow('user', req, res);
+app.put(`${apiVer}/member/:ID`, (req, res) => {
+    updateFlow('member', req, res);
 });
 
-app.delete(`${apiVer}/user/:ID`, (req, res) => {
-    deleteFlow('user', req, res);
+app.delete(`${apiVer}/member/:ID`, (req, res) => {
+    deleteFlow('member', req, res);
 });
 
 app.get(`${apiVer}/workflow`, (req, res) => {
@@ -419,8 +419,19 @@ app.get('*', (req, res) => {
     res.redirect('/');
 });
 
-module.exports = app;
-
 server.listen(3000);
+console.log(logStyle.FgBlue, 'Node Chat Engine Server listening on port 3000...');
 
-console.log(logStyle.FgBlue, 'Node Portal Server listening on port 3000...');
+module.exports = {
+    addToken: token => {
+        if (process.env.NODE_ENV === 'test') {
+            tokens[token] = new Date();
+        }
+    },
+    tokenValid: token => validToken({ authorization: `Bearer ${token}` }),
+    stop: () => {
+        server.close(() => {
+            console.log('Closed server listening on port 3000...');
+        });
+    }
+};

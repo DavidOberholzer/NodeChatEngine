@@ -87,36 +87,61 @@ module.exports = {
         }
     },
     getMessageBuffer: () => {
-        let messages = messageBuffer;
+        const messages = messageBuffer;
         messageBuffer = [];
         return messages;
     },
     loadData: fileDir => {
-        let data = utils.readFile(fileDir);
-        let tables = Object.entries(data);
+        const data = utils.readFile(fileDir);
+        const tables = Object.entries(data);
+        let allQueries = [];
         tables.map(([tableName, tableData], index) => {
             // console.log(logStyle.FgYellow, 'Loading Table Data for ' + tableName);
             tableData.map(row => {
                 let queryString1 = 'INSERT INTO ' + tableName + ' (';
                 let queryString2 = 'VALUES (';
-                Object.entries(row).map(column => {
-                    queryString1 += column[0] + ', ';
-                    let value = utils.escapeRegExp(column[1].toString());
+                Object.entries(row).map(([columnName, columnValue]) => {
+                    queryString1 += columnName + ', ';
+                    let value = columnValue.toString();
+                    if (tableName === 'member' && columnName === 'password') {
+                        value = sha256(value);
+                    } else {
+                        value = utils.escapeRegExp(value);
+                    }
                     queryString2 += "'" + value + "', ";
                 });
                 let queryString =
                     queryString1.slice(0, -2) + ')\n' + queryString2.slice(0, -2) + ');';
                 // console.log(queryString);
-                db.query(queryString)
-                    .then(res => {
-                        // console.log(logStyle.FgGreen, 'Loaded Entry');
-                    })
-                    .catch(e => {
-                        // console.log(logStyle.FgYellow, e);
-                    });
+                allQueries.push(
+                    db
+                        .query(queryString)
+                        .then(res => {
+                            // console.log(logStyle.FgGreen, 'Loaded Entry');
+                        })
+                        .catch(e => {
+                            // console.log(logStyle.FgYellow, e);
+                        })
+                );
             });
             // console.log(logStyle.FgGreen, 'Loaded Table Data for ' + tableName);
         });
+        return Promise.all(allQueries);
+    },
+    loadUser: user => {
+        let queryString = `INSERT INTO member (username, password, email) VALUES ('${
+            user.username
+        }', '${user.password}', '${user.email}');`;
+        return db.query(queryString);
+    },
+    clean: () => {
+        const tables = ['button', 'state', 'workflow', 'member'];
+        let allQueries = [];
+        tables.map(tableName => {
+            const queryString = `DELETE FROM ${tableName}`;
+            allQueries.push(db.query(queryString));
+        });
+        return Promise.all(allQueries);
     }
 };
 

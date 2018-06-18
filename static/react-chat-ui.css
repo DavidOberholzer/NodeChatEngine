@@ -1,7 +1,5 @@
 html {
-  background-color: white;
-  margin-left: 35%;
-  margin-right: 35%;
+  background-color: #b7f7ff;
   font-family: 'Courier New', Courier, monospace; }
 
 .Button {
@@ -30,13 +28,16 @@ html {
     border-radius: 10px;
     background-color: #e6677b; }
 
-.Chat--dropdown {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50%;
-  margin-bottom: 40%; }
+.Chat {
+  margin-left: 35%;
+  margin-right: 35%; }
+  .Chat--dropdown {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20%;
+    margin-bottom: 40%; }
 
 .message-enter {
   opacity: 0.01; }
