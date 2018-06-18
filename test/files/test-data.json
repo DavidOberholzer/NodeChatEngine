@@ -1,0 +1,40 @@
+{
+    "member": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password": "admin",
+            "email": "test@admin.com"
+        }
+    ],
+    "workflow": [
+        {
+            "id": 1,
+            "name": "Test Workflow"
+        }
+    ],
+    "state": [
+        {
+            "id": 1,
+            "name": "Test State",
+            "startstate": true,
+            "text": "Hello",
+            "workflowid": 1
+        },
+        {
+            "id": 2,
+            "name": "Test State 2",
+            "startstate": false,
+            "text": "Here 2",
+            "workflowid": 1
+        }
+    ],
+    "button": [
+        {
+            "id": 1,
+            "text": "Button",
+            "goto": 2,
+            "stateid": 1
+        }
+    ]
+}

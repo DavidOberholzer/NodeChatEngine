@@ -42,6 +42,5 @@ _Buttons_: Chat buttons are linked to a state and have button text and the state
 
 ## TODOs
 
-*   Allow connection to specify workflowID to select the bot you are talking to.
 *   Create User model that will be created upon connection and retained.
-*   User Input (atm buttons are the only input supported.)
+*	Add permanent User data that can be stored.

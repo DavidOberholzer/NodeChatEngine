@@ -9,6 +9,6 @@ module.exports = {
         return JSON.parse(content);
     },
     escapeRegExp: value => {
-        return value.replace(/[\']/g, "'$&");
+        return value.replace(/[\']/g, "\$&");
     }
 };

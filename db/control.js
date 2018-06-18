@@ -11,14 +11,15 @@ let messageBuffer = [];
 module.exports = {
     getDB: () => {
         if (!db) {
-            console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
+            // console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
             db = client.client;
             db.connect();
-            console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
+            // console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
         }
         return db;
     },
     setup: () => {
+        let dbActions = [];
         let tables = utils.readFile('./db/db_data/tables.json');
         Object.entries(tables).map(table => {
             let queryString = 'CREATE TABLE IF NOT EXISTS ' + table[0] + ' (\n';
@@ -47,22 +48,19 @@ module.exports = {
                 }
             });
             queryString +=
-                primaryKey +
-                (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') +
-                ');';
+                primaryKey + (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') + ');';
             // Debugging console logs
-            console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
-            console.log(queryString);
-            db
-                .query(queryString)
-                .then(res => {
-                    // Debugging console logs
-                    console.log(
-                        logStyle.FgGreen,
-                        'SUCCESS: Created table ' + table[0]
-                    );
-                })
-                .catch(e => console.log(logStyle.FgRed, e));
+            // console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
+            // console.log(queryString);
+            dbActions.push(
+                db
+                    .query(queryString)
+                    .then(res => {
+                        // Debugging console logs
+                        // console.log(logStyle.FgGreen, 'SUCCESS: Created table ' + table[0]);
+                    })
+                    .catch(e => console.log(logStyle.FgRed, e))
+            );
         });
         let password = sha256('admin');
         // loadTableData('member', [
@@ -72,18 +70,15 @@ module.exports = {
         //         email: 'davidoberholzertest@gmail.com'
         //     }
         // ]);
+        return Promise.all(dbActions);
     },
     connect: workflowID => {
-        let query =
-            'SELECT * FROM state WHERE workflowid=' +
-            workflowID +
-            ' AND startstate=true;';
+        let query = 'SELECT * FROM state WHERE workflowid=' + workflowID + ' AND startstate=true;';
         stateQuery(query, 'Start State Retrieved');
     },
     sendMessage: message => {
         if (message.goto) {
-            let queryString =
-                'SELECT * FROM state WHERE id=' + message.goto + ';';
+            let queryString = 'SELECT * FROM state WHERE id=' + message.goto + ';';
             stateQuery(queryString, 'State Retrieved');
         } else {
             messageBuffer.push({
@@ -95,14 +90,40 @@ module.exports = {
         let messages = messageBuffer;
         messageBuffer = [];
         return messages;
+    },
+    loadData: fileDir => {
+        let data = utils.readFile(fileDir);
+        let tables = Object.entries(data);
+        tables.map(([tableName, tableData], index) => {
+            // console.log(logStyle.FgYellow, 'Loading Table Data for ' + tableName);
+            tableData.map(row => {
+                let queryString1 = 'INSERT INTO ' + tableName + ' (';
+                let queryString2 = 'VALUES (';
+                Object.entries(row).map(column => {
+                    queryString1 += column[0] + ', ';
+                    let value = utils.escapeRegExp(column[1].toString());
+                    queryString2 += "'" + value + "', ";
+                });
+                let queryString =
+                    queryString1.slice(0, -2) + ')\n' + queryString2.slice(0, -2) + ');';
+                // console.log(queryString);
+                db.query(queryString)
+                    .then(res => {
+                        // console.log(logStyle.FgGreen, 'Loaded Entry');
+                    })
+                    .catch(e => {
+                        // console.log(logStyle.FgYellow, e);
+                    });
+            });
+            // console.log(logStyle.FgGreen, 'Loaded Table Data for ' + tableName);
+        });
     }
 };
 
 const stateQuery = (query, successMessage) => {
-    db
-        .query(query)
+    db.query(query)
         .then(res => {
-            console.log(logStyle.FgGreen, successMessage);
+            // console.log(logStyle.FgGreen, successMessage);
             buttonQuery(res.rows[0]);
         })
         .catch(e => {
@@ -119,8 +140,7 @@ const buttonQuery = state => {
         state['buttons'] = buttons;
         addToMessageBuffer(state);
     };
-    db
-        .query(query)
+    db.query(query)
         .then(res => {
             appendButtons(res.rows);
         })
@@ -133,43 +153,3 @@ const buttonQuery = state => {
 const addToMessageBuffer = message => {
     messageBuffer.push(message);
 };
-
-/* Depricated code loading of json file data into tables. */
-
-const loadTableData = (tableName, tableData) => {
-    console.log(logStyle.FgYellow, 'Loading Table Data for ' + tableName);
-    tableData.map(row => {
-        let queryString1 = 'INSERT INTO ' + tableName + ' (';
-        let queryString2 = 'VALUES (';
-        Object.entries(row).map(column => {
-            queryString1 += column[0] + ', ';
-            let value = utils.escapeRegExp(column[1].toString());
-            queryString2 += "'" + value + "', ";
-        });
-        let queryString =
-            queryString1.slice(0, -2) +
-            ')\n' +
-            queryString2.slice(0, -2) +
-            ');';
-        console.log(queryString);
-        db
-            .query(queryString)
-            .then(res => {
-                console.log(logStyle.FgGreen, 'Loaded Entry');
-            })
-            .catch(e => {
-                console.log(logStyle.FgYellow, e);
-            });
-    });
-    console.log(logStyle.FgGreen, 'Loaded Table Data for ' + tableName);
-};
-
-const loadData = () => {
-    let data = utils.readFile('./db/db_data/chatbots.json');
-    let tables = Object.entries(data);
-    tables.map((tableData, index) => {
-        loadTableData(tableData[0], tableData[1]);
-    });
-};
-
-/* End of depricated code */
