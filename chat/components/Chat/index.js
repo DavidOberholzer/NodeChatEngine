@@ -103,7 +103,7 @@ class Chat extends Component {
                             <LogoutIcon />
                         </Button>
                         {selection ? (
-                            <Button onClick={this.handleBack}>
+                            <Button onClick={this.handleBack} data-cy="back">
                                 Back
                                 <BackIcon />{' '}
                             </Button>
@@ -112,7 +112,7 @@ class Chat extends Component {
                 </AppBar>
                 {!selection ? (
                     workflows ? (
-                        <div className="Chat Chat--dropdown">
+                        <div className="Chat Chat--dropdown" data-cy="chooseworkflow">
                             <Button
                                 aria-owns={anchorEl ? 'simple-menu' : null}
                                 aria-haspopup="true"
@@ -128,10 +128,11 @@ class Chat extends Component {
                                 open={Boolean(anchorEl)}
                                 onClose={() => this.handleClose(null)}
                             >
-                                {workflows.map(workflow => (
+                                {workflows.map((workflow, index) => (
                                     <MenuItem
                                         key={workflow.id}
                                         onClick={() => this.handleClose(workflow.id)}
+                                        data-cy={index}
                                     >
                                         {workflow.name}
                                     </MenuItem>

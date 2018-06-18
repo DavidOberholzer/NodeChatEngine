@@ -24421,7 +24421,7 @@ var Chat = function (_Component) {
                         ),
                         selection ? _react2['default'].createElement(
                             _Button2['default'],
-                            { onClick: this.handleBack },
+                            { onClick: this.handleBack, 'data-cy': 'back' },
                             'Back',
                             _react2['default'].createElement(_Reply2['default'], null),
                             ' '
@@ -24430,7 +24430,7 @@ var Chat = function (_Component) {
                 ),
                 !selection ? workflows ? _react2['default'].createElement(
                     'div',
-                    { className: 'Chat Chat--dropdown' },
+                    { className: 'Chat Chat--dropdown', 'data-cy': 'chooseworkflow' },
                     _react2['default'].createElement(
                         _Button2['default'],
                         {
@@ -24452,14 +24452,15 @@ var Chat = function (_Component) {
                                 return _this3.handleClose(null);
                             }
                         },
-                        workflows.map(function (workflow) {
+                        workflows.map(function (workflow, index) {
                             return _react2['default'].createElement(
                                 _MenuItem2['default'],
                                 {
                                     key: workflow.id,
                                     onClick: function onClick() {
                                         return _this3.handleClose(workflow.id);
-                                    }
+                                    },
+                                    'data-cy': index
                                 },
                                 workflow.name
                             );
@@ -38125,7 +38126,12 @@ var Login = function (_Component) {
                     null,
                     _react2['default'].createElement(
                         _Button2['default'],
-                        { variant: 'contained', color: 'primary', onClick: this.handleSubmit },
+                        {
+                            variant: 'contained',
+                            color: 'primary',
+                            onClick: this.handleSubmit,
+                            'data-cy': 'login'
+                        },
                         'Login'
                     )
                 )

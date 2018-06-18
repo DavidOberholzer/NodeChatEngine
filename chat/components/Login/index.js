@@ -101,7 +101,12 @@ class Login extends Component {
                     />
                 </CardContent>
                 <CardActions>
-                    <Button variant="contained" color="primary" onClick={this.handleSubmit}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmit}
+                        data-cy="login"
+                    >
                         Login
                     </Button>
                 </CardActions>
