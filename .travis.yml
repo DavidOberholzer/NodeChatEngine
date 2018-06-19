@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - "8.10.0"
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+before_install:
+  - psql -c 'CREATE DATABASE test;' -U postgres
+install:
+  - yarn install
+  - yarn dbsetup:test
+before_script:
+  - yarn start:testdb &
+script:
+  - yarn test
+  - yarn dbtakedown:test
+  - yarn dbsetup:test
+  - yarn cy:run
+after_script:
+  - yarn dbtakedown:test

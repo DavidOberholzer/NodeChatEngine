@@ -1,108 +1,108 @@
 {
-    "Workflow": {
-        "ID": {
+    "workflow": {
+        "id": {
             "type": "serial",
             "primaryKey": true,
             "required": true
         },
-        "CreatedAt": {
+        "createdat": {
             "type": "date",
             "default": "CURRENT_TIMESTAMP",
             "required": true
         },
-        "Name": {
+        "name": {
             "type": "varchar(80)",
             "default": "null",
             "required": false
         }
     },
-    "State": {
-        "ID": {
+    "state": {
+        "id": {
             "type": "serial",
             "primaryKey": true,
             "required": true
         },
-        "CreatedAt": {
+        "createdat": {
             "type": "date",
             "default": "CURRENT_TIMESTAMP",
             "required": true
         },
-        "Name": {
+        "name": {
             "type": "varchar(80)",
             "default": "null",
             "required": false
         },
-        "Text": {
+        "text": {
             "type": "varchar(255)",
             "default": "null",
             "required": false
         },
-        "Input": {
+        "input": {
             "type": "varchar(255)",
             "default": "null",
             "required": false
         },
-        "StartState": {
+        "startstate": {
             "type": "BOOLEAN",
             "default": "false",
             "required": false
         },
-        "Auto": {
+        "auto": {
             "type": "int",
             "foreignKey": "State(ID)",
             "default": "null",
             "required": false
         },
-        "WorkflowID": {
+        "workflowid": {
             "type": "int",
             "foreignKey": "Workflow(ID)",
             "required": true
         }
     },
-    "Button": {
-        "ID": {
+    "button": {
+        "id": {
             "type": "serial",
             "primaryKey": true,
             "required": true
         },
-        "CreatedAt": {
+        "createdat": {
             "type": "date",
             "default": "CURRENT_TIMESTAMP",
             "required": true
         },
-        "Text": {
+        "text": {
             "type": "varchar(255)",
             "default": "null",
             "required": false
         },
-        "Goto": {
+        "goto": {
             "type": "int",
             "default": "null",
             "foreignKey": "State(ID)",
             "required": false
         },
-        "StateID": {
+        "stateid": {
             "type": "int",
             "foreignKey": "State(ID)",
             "required": true
         }
     },
     "Member": {
-        "ID": {
+        "id": {
             "type": "serial",
             "primaryKey": true,
             "required": true
         },
-        "Username": {
+        "username": {
             "type": "varchar(255)",
             "required": true,
             "unique": true
         },
-        "Password": {
+        "password": {
             "type": "varchar(255)",
             "required": true
         },
-        "Email": {
+        "email": {
             "type": "varchar(255)",
             "default": null,
             "required": false
