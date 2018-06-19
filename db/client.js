@@ -3,10 +3,8 @@ const { Client } = require('pg');
 const database =
     process.env.NODE_ENV === 'test'
         ? {
-              user: 'test',
               host: 'localhost',
               database: 'test',
-              password: 'test',
               port: 5432
           }
         : {

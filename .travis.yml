@@ -1,16 +1,19 @@
 language: node_js
 node_js:
-  - "node"
   - "8.10.0"
 services:
   - postgresql
+cache:
+  directories:
+    - "node_modules"
+  yarn: true
 before_install:
   - psql -c 'create database test;' -U postgres
 install:
   - yarn install
   - yarn dbsetup:test
 before_script:
-  - yarn start:testdb
+  - yarn start:testdb &
 script:
   - yarn test
   - yarn cy:run
