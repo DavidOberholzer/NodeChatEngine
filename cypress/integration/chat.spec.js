@@ -1,7 +1,4 @@
 describe('Chat UI Test', function() {
-    before(() => {
-        cy.exec('yarn dbsetup');
-    });
     beforeEach(() => {
         cy.visit('/');
     });
@@ -16,12 +13,9 @@ describe('Chat UI Test', function() {
         cy.get('input[id=password-input]').type('admin');
         cy.get('button[data-cy=login').click();
         cy.url().should('include', '/chat-space');
-				cy.get('div[data-cy=chooseworkflow]').click();
-				cy.get('li[data-cy=0]').click();
-				cy.get('button[data-cy=back]').click();
-				cy.get('div[data-cy=chooseworkflow]');
-    });
-    after(() => {
-        cy.exec('yarn dbtakedown');
+        cy.get('div[data-cy=chooseworkflow]').click();
+        cy.get('li[data-cy=0]').click();
+        cy.get('button[data-cy=back]').click();
+        cy.get('div[data-cy=chooseworkflow]');
     });
 });

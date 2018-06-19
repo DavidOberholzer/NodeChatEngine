@@ -18,16 +18,20 @@ const expressWs = require('express-ws')(app, server);
 
 let db = DBcontroller.getDB();
 
-let tokens = {};
+let tokens = {
+    testtoken: null
+};
 
 process.title = 'NodeChatEngine';
 
 setInterval(() => {
     let newTokens = tokens;
     Object.entries(tokens).map(([token, time]) => {
-        const now = new Date();
-        if (now - time > 60000 * 30) {
-            delete newTokens[token];
+        if (token !== 'testtoken') {
+            const now = new Date();
+            if (now - time > 60000 * 30) {
+                delete newTokens[token];
+            }
         }
     });
     tokens = newTokens;
@@ -127,6 +131,9 @@ const apiVer = '/api/v1';
 const validToken = headers => {
     const existingTokens = new Set(Object.keys(tokens));
     const token = headers.authorization;
+    if (token === 'testtoken') {
+        return process.env.NODE_ENV === 'test' ? true : false;
+    }
     return token && existingTokens.has(token.replace('Bearer ', '')) ? true : false;
 };
 
@@ -423,17 +430,3 @@ app.get('*', (req, res) => {
 
 server.listen(3000);
 console.log(logStyle.FgBlue, 'Node Chat Engine Server listening on port 3000...');
-
-module.exports = {
-    addToken: token => {
-        if (process.env.NODE_ENV === 'test') {
-            tokens[token] = new Date();
-        }
-    },
-    tokenValid: token => validToken({ authorization: `Bearer ${token}` }),
-    stop: () => {
-        server.close(() => {
-            console.log('Closed server listening on port 3000...');
-        });
-    }
-};

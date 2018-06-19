@@ -1,0 +1,15 @@
+language: node_js
+services:
+  - postgresql
+before_install:
+  - psql -c 'create database test;' -U postgres
+install:
+  - yarn install
+  - yarn dbsetup:test
+before_script:
+  - yarn start:testdb
+script:
+  - yarn test
+  - yarn cy:run
+after_script:
+  - yarn dbtakedown:test

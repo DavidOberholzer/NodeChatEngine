@@ -1,12 +1,8 @@
 const expect = require('chai').expect;
-const app = require('../app');
 const request = require('request');
 
 describe('API Crud Calls', () => {
-    let token = 'test-token';
-    before(async () => {
-        app.addToken(token);
-    });
+    let token = 'testtoken';
     describe('authenticate', () => {
         it('should return a valid token on successful login', function(done) {
             this.timeout(1000);
@@ -21,7 +17,7 @@ describe('API Crud Calls', () => {
             };
             request.post('http://localhost:3000/authenticate', options, (error, response, body) => {
                 const token = JSON.parse(body).token;
-                expect(app.tokenValid(token)).to.be.equal(true);
+                expect(token).to.be.a('string');
             });
         });
     });
@@ -357,8 +353,5 @@ describe('API Crud Calls', () => {
                 }
             );
         });
-    });
-    after(async () => {
-        app.stop();
     });
 });
