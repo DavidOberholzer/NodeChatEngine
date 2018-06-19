@@ -14,4 +14,6 @@ before_script:
   - yarn start:testdb &
 script:
   - yarn test
-  - yarn cy:run:local
+  - yarn cy:run
+after_script:
+  - yarn dbtakedown:test
