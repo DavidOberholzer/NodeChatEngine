@@ -10,7 +10,7 @@ cache:
     - "node_modules"
   yarn: true
 before_install:
-  - psql -c 'createdb test --encoding=utf8;' -U postgres
+  - psql -c 'CREATE DATABASE test;' -U postgres
 install:
   - yarn install
   - yarn dbsetup:test
