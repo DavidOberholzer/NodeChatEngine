@@ -11,10 +11,10 @@ let messageBuffer = [];
 module.exports = {
     getDB: () => {
         if (!db) {
-            console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
+            // console.log(logStyle.FgYellow, 'Connecting to chatengine DB.');
             db = client.client;
             db.connect();
-            console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
+            // console.log(logStyle.FgGreen, 'SUCCESS: Connected to DB');
         }
         return db;
     },
@@ -50,8 +50,8 @@ module.exports = {
             queryString +=
                 primaryKey + (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') + ');';
             // Debugging console logs
-            console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
-            console.log(queryString);
+            // console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
+            // console.log(queryString);
             dbActions.push(db.query(queryString));
         });
         let password = sha256('admin');

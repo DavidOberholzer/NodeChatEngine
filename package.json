@@ -13,7 +13,7 @@
         "storybook:build": "build-storybook -c chat/.storybook -o react/.out",
         "dbsetup": "node ./db/takedown && node ./db/setup",
         "dbtakedown": "node ./db/takedown",
-        "dbsetup:test": "NODE_ENV=test node ./db/takedown && NODE_ENV=test node ./db/setup",
+        "dbsetup:test": "NODE_ENV=test node ./db/setup",
         "dbtakedown:test": "NODE_ENV=test node ./db/takedown",
         "cy:run": "cypress run",
         "cy:run:local": "yarn dbsetup:test && cypress run --headed && yarn dbtakedown:test",
