@@ -50,17 +50,9 @@ module.exports = {
             queryString +=
                 primaryKey + (foreignKeys ? ',\n ' + foreignKeys.slice(0, -2) : '') + ');';
             // Debugging console logs
-            // console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
-            // console.log(queryString);
-            dbActions.push(
-                db
-                    .query(queryString)
-                    .then(res => {
-                        // Debugging console logs
-                        console.log(logStyle.FgGreen, 'SUCCESS: Created table ' + table[0]);
-                    })
-                    .catch(e => console.log(logStyle.FgRed, e))
-            );
+            console.log(logStyle.FgYellow, 'CREATING TABLE WITH QUERY: ');
+            console.log(queryString);
+            dbActions.push(db.query(queryString));
         });
         let password = sha256('admin');
         // loadTableData('member', [
