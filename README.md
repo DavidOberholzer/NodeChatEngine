@@ -9,6 +9,10 @@ Firstly this is an node project so start up NPM or yarn.
 ```
 npm install
 ```
+or just
+```
+yarn
+```
 
 Then you need a local postgres user and database with name, password and DBname of `nodechatengine`.
 
@@ -20,9 +24,16 @@ yarn dbsetup
 
 This will populate the DB with the correct tables.
 
+Build both the admin and chat bundles with:
+
+```
+yarn build:admin
+yarn build:chat
+```
+
 ## Create User
 
-To create a user you can run the command:
+To create a user you can run the node superuser js file:
 
 ```
 node superuser
