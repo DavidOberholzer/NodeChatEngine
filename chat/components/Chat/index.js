@@ -21,6 +21,7 @@ import { chatChangeWorkflow, chatWorkflowsLoad } from '../../actions/chat';
 import WebSocket from '../../utils/client';
 import { messageClearAll } from '../../actions/messages';
 import { logout } from '../../actions/auth';
+import constants from '../../../constants';
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout()),
@@ -68,7 +69,8 @@ class Chat extends Component {
         chatChangeWorkflow(null);
         messageClearAll();
         localStorage.removeItem('token');
-        window.location.href = 'http://localhost:3000/';
+        const env = process.env.NODE_ENV || 'dev';
+        window.location.href = constants.urls[env];
     }
     handleBack(event) {
         WebSocket().send(JSON.stringify({ text: '!reset' }));
