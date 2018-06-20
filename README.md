@@ -14,17 +14,13 @@ or just
 yarn
 ```
 
-Then you need a local postgres user and database with name, password and DBname of `nodechatengine`.
-
-Once you have a db ready, you can run the command:
+Then you need a local postgres user and database with name, password and DBname of `nodechatengine`. Once you have a db ready, you can run the command:
 
 ```
 yarn dbsetup
 ```
 
-This will populate the DB with the correct tables.
-
-Build both the admin and chat bundles with:
+This will populate the DB with the correct tables. Then build both the admin and chat bundles with:
 
 ```
 yarn build:admin
@@ -68,6 +64,12 @@ _Workflows_: Workflows consist of many chat states.
 _States_: Chat States are places where the user is at in a chat workflow. It consists of text to be shown to the user, buttons the user can use to move to other states, and an auto field which dictates that once the engine hits that state it will auto direct to a new state asn no input is required.
 
 _Buttons_: Chat buttons are linked to a state and have button text and the state to which they will transition the user.
+
+## Testing
+
+Testing is done with Mocha and Chai. A test database called `test` with user `postgres` and no password is used for TravisCI tests on PR's.
+To run the testing with the NODE_ENV variable set to `test` you can run the NodeChatEngine with the testdb settings `yarn start:testdb`.
+Then you can run the tests using `yarn test:local`.
 
 ## TODOs
 
