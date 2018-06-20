@@ -4,7 +4,7 @@ Hey there! This is my simple node based chat engine.
 
 # Setup
 
-Firstly this is an node project so start up NPM.
+Firstly this is an node project so start up NPM or yarn.
 
 ```
 npm install
@@ -42,5 +42,5 @@ _Buttons_: Chat buttons are linked to a state and have button text and the state
 
 ## TODOs
 
-*   Create User model that will be created upon connection and retained.
-*	Add permanent User data that can be stored.
+-   Create User model that will be created upon connection and retained.
+-   Add permanent User data that can be stored.
