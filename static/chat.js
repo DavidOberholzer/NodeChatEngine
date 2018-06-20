@@ -12190,6 +12190,7 @@ var add = function add(message) {
     return _store2['default'].dispatch((0, _messages.messageAdd)(message));
 };
 var websocketURL = process.env.NODE_ENV === 'prod' ? 'wss://' + window.location.href.split('/', 3)[2] + '/chat' : 'ws://' + window.location.href.split('/', 3)[2] + '/chat';
+console.log(websocketURL);
 (0, _client2['default'])(websocketURL, add);
 
 document.getElementById('Chat-div') && (0, _reactDom.render)(_react2['default'].createElement(

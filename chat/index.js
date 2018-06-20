@@ -13,6 +13,7 @@ const websocketURL =
     process.env.NODE_ENV === 'prod'
         ? `wss://${window.location.href.split('/', 3)[2]}/chat`
         : `ws://${window.location.href.split('/', 3)[2]}/chat`;
+console.log(websocketURL);
 WebSocket(websocketURL, add);
 
 document.getElementById('Chat-div') &&
