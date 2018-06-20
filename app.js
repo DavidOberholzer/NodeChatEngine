@@ -429,4 +429,4 @@ app.get('*', (req, res) => {
 });
 
 server.listen(3000);
-console.log(logStyle.FgBlue, 'Node Chat Engine Server listening on port 3000...');
+console.log(logStyle.FgBlue, `${process.env.NODE_ENV} Node Chat Engine Server listening on port 3000...`);
