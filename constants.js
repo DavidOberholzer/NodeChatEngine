@@ -1,4 +1,12 @@
 // All colour/style strings for console logs.
+const urls = {
+    prod: 'https://www.nodechatengine.tk',
+    dev: 'http://localhost:3000',
+    test: 'http://localhost:3000'
+};
+const url = urls[process.env.NODE_ENV || 'dev'];
+console.log(url);
+
 module.exports = {
     Reset: '\x1b,[0m%s\x1b[0m',
     Bright: '\x1b[1m%s\x1b[0m',
@@ -17,9 +25,5 @@ module.exports = {
     FgCyan: '\x1b[36m%s\x1b[0m',
     FgWhite: '\x1b[37m%s\x1b[0m',
 
-    urls: {
-        prod: 'https://www.nodechatengine.tk',
-        dev: 'http://localhost:3000',
-        test: 'http://localhost:3000'
-    }
+    url
 };

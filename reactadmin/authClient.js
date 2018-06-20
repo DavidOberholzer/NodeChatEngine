@@ -1,18 +1,16 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 
-import constants from '../constants';
-
-const env = process.env.NODE_ENV || 'dev';
-const url = constants.urls[env];
-
 export default (type, params) => {
     if (type === AUTH_LOGIN) {
         const { username, password } = params;
-        const request = new Request(`${url}/authenticate`, {
-            method: 'POST',
-            body: JSON.stringify({ username, password }),
-            headers: new Headers({ 'Content-Type': 'application/json' })
-        });
+        const request = new Request(
+            `${window.location.href.split('/', 3).join('/')}/authenticate`,
+            {
+                method: 'POST',
+                body: JSON.stringify({ username, password }),
+                headers: new Headers({ 'Content-Type': 'application/json' })
+            }
+        );
         return fetch(request)
             .then(response => {
                 if (response.status < 200 || response.status >= 300) {

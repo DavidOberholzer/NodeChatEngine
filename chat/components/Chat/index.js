@@ -69,8 +69,7 @@ class Chat extends Component {
         chatChangeWorkflow(null);
         messageClearAll();
         localStorage.removeItem('token');
-        const env = process.env.NODE_ENV || 'dev';
-        window.location.href = constants.urls[env];
+        window.location.href = window.location.href.split('/', 3).join("/");
     }
     handleBack(event) {
         WebSocket().send(JSON.stringify({ text: '!reset' }));
