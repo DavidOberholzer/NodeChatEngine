@@ -10,8 +10,6 @@ before_install:
 install:
   - yarn install
   - yarn dbsetup:test
-  - yarn build:chat
-  - yarn build:admin
 before_script:
   - yarn start:testdb &
 script:
