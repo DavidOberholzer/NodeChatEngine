@@ -2,6 +2,7 @@ import constants from '../../constants';
 
 const env = process.env.NODE_ENV || 'dev';
 const url = constants.urls[env];
+console.log(url);
 
 export default {
     auth: (username, password) => {
