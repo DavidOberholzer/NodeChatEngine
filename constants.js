@@ -15,5 +15,11 @@ module.exports = {
     FgBlue: '\x1b[34m%s\x1b[0m',
     FgMagenta: '\x1b[35m%s\x1b[0m',
     FgCyan: '\x1b[36m%s\x1b[0m',
-    FgWhite: '\x1b[37m%s\x1b[0m'
+    FgWhite: '\x1b[37m%s\x1b[0m',
+
+    urls: {
+        prod: 'https://www.nodechatengine.tk',
+        dev: 'http://localhost:3000',
+        test: 'http://localhost:3000'
+    }
 };
