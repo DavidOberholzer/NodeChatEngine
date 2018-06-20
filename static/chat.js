@@ -12157,7 +12157,7 @@ exports["default"] = _default;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(process) {
 
 var _react = __webpack_require__(1);
 
@@ -12189,13 +12189,15 @@ __webpack_require__(428);
 var add = function add(message) {
     return _store2['default'].dispatch((0, _messages.messageAdd)(message));
 };
-(0, _client2['default'])('ws://' + window.location.href.split('/', 3)[2] + '/chat', add);
+var websocketURL = process.env.NODE_ENV === 'prod' ? 'wss://' + window.location.href.split('/', 3)[2] + '/chat' : 'ws://' + window.location.href.split('/', 3)[2] + '/chat';
+(0, _client2['default'])(websocketURL, add);
 
 document.getElementById('Chat-div') && (0, _reactDom.render)(_react2['default'].createElement(
     _reactRedux.Provider,
     { store: _store2['default'] },
     _react2['default'].createElement(_App2['default'], null)
 ), document.getElementById('Chat-div'));
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 171 */
