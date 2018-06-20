@@ -71,6 +71,8 @@ Testing is done with Mocha and Chai. A test database called `test` with user `po
 To run the testing with the NODE_ENV variable set to `test` you can run the NodeChatEngine with the testdb settings `yarn start:testdb`.
 Then you can run the tests using `yarn test:local`.
 
+Cypress.io is used for end to end testing.
+
 ## TODOs
 
 -   Create User model that will be created upon connection and retained.
