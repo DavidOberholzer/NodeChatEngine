@@ -7271,7 +7271,7 @@ var _classnames = _interopRequireDefault(__webpack_require__(8));
 
 var _withStyles = _interopRequireDefault(__webpack_require__(6));
 
-var _Textarea = _interopRequireDefault(__webpack_require__(416));
+var _Textarea = _interopRequireDefault(__webpack_require__(415));
 
 // Supports determination of isControlled().
 // Controlled input accepts its current value as a prop.
@@ -12183,13 +12183,13 @@ var _messages = __webpack_require__(45);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-__webpack_require__(429);
+__webpack_require__(428);
 
 
 var add = function add(message) {
     return _store2['default'].dispatch((0, _messages.messageAdd)(message));
 };
-(0, _client2['default'])('ws://localhost:3000/chat', add);
+(0, _client2['default'])('ws://' + window.location.href.split('/', 3)[2] + '/chat', add);
 
 document.getElementById('Chat-div') && (0, _reactDom.render)(_react2['default'].createElement(
     _reactRedux.Provider,
@@ -21170,7 +21170,7 @@ var _Chat = __webpack_require__(234);
 
 var _Chat2 = _interopRequireDefault(_Chat);
 
-var _Login = __webpack_require__(407);
+var _Login = __webpack_require__(406);
 
 var _Login2 = _interopRequireDefault(_Login);
 
@@ -24279,10 +24279,6 @@ var _client2 = _interopRequireDefault(_client);
 var _messages = __webpack_require__(45);
 
 var _auth = __webpack_require__(167);
-
-var _constants = __webpack_require__(406);
-
-var _constants2 = _interopRequireDefault(_constants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -37945,44 +37941,6 @@ exports['default'] = Message;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-// All colour/style strings for console logs.
-var urls = {
-    prod: 'https://www.nodechatengine.tk',
-    dev: 'http://localhost:3000',
-    test: 'http://localhost:3000'
-};
-var url = urls[process.env.NODE_ENV || 'dev'];
-console.log(url);
-
-module.exports = {
-    Reset: '\x1b,[0m%s\x1b[0m',
-    Bright: '\x1b[1m%s\x1b[0m',
-    Dim: '\x1b[2m%s\x1b[0m',
-    Underscore: '\x1b[4m%s\x1b[0m',
-    Blink: '\x1b[5m%s\x1b[0m',
-    Reverse: '\x1b[7m%s\x1b[0m',
-    Hidden: '\x1b[8m%s\x1b[0m',
-
-    FgBlack: '\x1b[30m%s\x1b[0m',
-    FgRed: '\x1b[31m%s\x1b[0m',
-    FgGreen: '\x1b[32m%s\x1b[0m',
-    FgYellow: '\x1b[33m%s\x1b[0m',
-    FgBlue: '\x1b[34m%s\x1b[0m',
-    FgMagenta: '\x1b[35m%s\x1b[0m',
-    FgCyan: '\x1b[36m%s\x1b[0m',
-    FgWhite: '\x1b[37m%s\x1b[0m',
-
-    url: url
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 407 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -38003,19 +37961,19 @@ var _Button = __webpack_require__(83);
 
 var _Button2 = _interopRequireDefault(_Button);
 
-var _Card = __webpack_require__(408);
+var _Card = __webpack_require__(407);
 
 var _Card2 = _interopRequireDefault(_Card);
 
-var _CardActions = __webpack_require__(410);
+var _CardActions = __webpack_require__(409);
 
 var _CardActions2 = _interopRequireDefault(_CardActions);
 
-var _CardContent = __webpack_require__(412);
+var _CardContent = __webpack_require__(411);
 
 var _CardContent2 = _interopRequireDefault(_CardContent);
 
-var _TextField = __webpack_require__(414);
+var _TextField = __webpack_require__(413);
 
 var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -38187,7 +38145,7 @@ var Login = function (_Component) {
 exports['default'] = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
 
 /***/ }),
-/* 408 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38205,10 +38163,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _Card = _interopRequireDefault(__webpack_require__(409));
+var _Card = _interopRequireDefault(__webpack_require__(408));
 
 /***/ }),
-/* 409 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38283,7 +38241,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 410 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38301,10 +38259,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _CardActions = _interopRequireDefault(__webpack_require__(411));
+var _CardActions = _interopRequireDefault(__webpack_require__(410));
 
 /***/ }),
-/* 411 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38399,7 +38357,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 412 */
+/* 411 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38417,10 +38375,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _CardContent = _interopRequireDefault(__webpack_require__(413));
+var _CardContent = _interopRequireDefault(__webpack_require__(412));
 
 /***/ }),
-/* 413 */
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38499,7 +38457,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 414 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38517,10 +38475,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _TextField = _interopRequireDefault(__webpack_require__(415));
+var _TextField = _interopRequireDefault(__webpack_require__(414));
 
 /***/ }),
-/* 415 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38545,13 +38503,13 @@ var _propTypes = _interopRequireDefault(__webpack_require__(3));
 
 var _Input = _interopRequireDefault(__webpack_require__(105));
 
-var _InputLabel = _interopRequireDefault(__webpack_require__(417));
+var _InputLabel = _interopRequireDefault(__webpack_require__(416));
 
-var _FormControl = _interopRequireDefault(__webpack_require__(421));
+var _FormControl = _interopRequireDefault(__webpack_require__(420));
 
-var _FormHelperText = _interopRequireDefault(__webpack_require__(423));
+var _FormHelperText = _interopRequireDefault(__webpack_require__(422));
 
-var _Select = _interopRequireDefault(__webpack_require__(425));
+var _Select = _interopRequireDefault(__webpack_require__(424));
 
 // @inheritedComponent FormControl
 
@@ -38822,7 +38780,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 416 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39122,7 +39080,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 417 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39140,10 +39098,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _InputLabel = _interopRequireDefault(__webpack_require__(418));
+var _InputLabel = _interopRequireDefault(__webpack_require__(417));
 
 /***/ }),
-/* 418 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39170,7 +39128,7 @@ var _classnames = _interopRequireDefault(__webpack_require__(8));
 
 var _withStyles = _interopRequireDefault(__webpack_require__(6));
 
-var _FormLabel = _interopRequireDefault(__webpack_require__(419));
+var _FormLabel = _interopRequireDefault(__webpack_require__(418));
 
 // @inheritedComponent FormLabel
 var styles = function styles(theme) {
@@ -39309,7 +39267,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 419 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39327,10 +39285,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _FormLabel = _interopRequireDefault(__webpack_require__(420));
+var _FormLabel = _interopRequireDefault(__webpack_require__(419));
 
 /***/ }),
-/* 420 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39490,7 +39448,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 421 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39508,10 +39466,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _FormControl = _interopRequireDefault(__webpack_require__(422));
+var _FormControl = _interopRequireDefault(__webpack_require__(421));
 
 /***/ }),
-/* 422 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39782,7 +39740,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 423 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39800,10 +39758,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _FormHelperText = _interopRequireDefault(__webpack_require__(424));
+var _FormHelperText = _interopRequireDefault(__webpack_require__(423));
 
 /***/ }),
-/* 424 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39947,7 +39905,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 425 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39965,10 +39923,10 @@ Object.defineProperty(exports, "default", {
   }
 });
 
-var _Select = _interopRequireDefault(__webpack_require__(426));
+var _Select = _interopRequireDefault(__webpack_require__(425));
 
 /***/ }),
-/* 426 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39989,7 +39947,7 @@ var _react = _interopRequireDefault(__webpack_require__(1));
 
 var _propTypes = _interopRequireDefault(__webpack_require__(3));
 
-var _SelectInput = _interopRequireDefault(__webpack_require__(427));
+var _SelectInput = _interopRequireDefault(__webpack_require__(426));
 
 var _withStyles = _interopRequireDefault(__webpack_require__(6));
 
@@ -39997,7 +39955,7 @@ var _ArrowDropDown = _interopRequireDefault(__webpack_require__(168));
 
 var _Input = _interopRequireDefault(__webpack_require__(105));
 
-var _NativeSelect = __webpack_require__(428);
+var _NativeSelect = __webpack_require__(427);
 
 var _NativeSelectInput = _interopRequireDefault(__webpack_require__(169));
 
@@ -40176,7 +40134,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 427 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40669,7 +40627,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 428 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40841,7 +40799,7 @@ exports["default"] = _default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 429 */
+/* 428 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
