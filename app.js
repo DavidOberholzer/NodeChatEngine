@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const https = require('https');
 const sha256 = require('sha256');
 const util = require('util');
 const uuidv1 = require('uuid/v1');
@@ -12,7 +13,7 @@ const utils = require('./utils');
 
 let app = express();
 
-let server = http.createServer(app);
+let server = process.env.NODE_ENV === 'prod' ? https.createServer(app) : http.createServer(app);
 
 const expressWs = require('express-ws')(app, server);
 
