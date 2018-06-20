@@ -9,10 +9,11 @@ import WebSocket from './utils/client';
 import { messageAdd } from './actions/messages';
 
 const add = message => store.dispatch(messageAdd(message));
+const splitLocation = window.location.href.split('/', 3);
 const websocketURL =
-    process.env.NODE_ENV === 'prod'
-        ? `wss://${window.location.href.split('/', 3)[2]}/chat`
-        : `ws://${window.location.href.split('/', 3)[2]}/chat`;
+    splitLocation[0].indexOf('s') >= 0
+        ? `wss://${splitLocation[2]}/chat`
+        : `ws://${splitLocation[2]}/chat`;
 console.log(websocketURL);
 WebSocket(websocketURL, add);
 
