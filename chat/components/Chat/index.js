@@ -21,7 +21,6 @@ import { chatChangeWorkflow, chatWorkflowsLoad } from '../../actions/chat';
 import WebSocket from '../../utils/client';
 import { messageClearAll } from '../../actions/messages';
 import { logout } from '../../actions/auth';
-import constants from '../../../constants';
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout()),

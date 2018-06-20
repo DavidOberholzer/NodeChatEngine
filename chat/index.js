@@ -9,7 +9,7 @@ import WebSocket from './utils/client';
 import { messageAdd } from './actions/messages';
 
 const add = message => store.dispatch(messageAdd(message));
-WebSocket('ws://localhost:3000/chat', add);
+WebSocket(`ws://${window.location.href.split('/', 3)[2]}/chat`, add);
 
 document.getElementById('Chat-div') &&
     render(

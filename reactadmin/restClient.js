@@ -1,7 +1,5 @@
 import { fetchUtils, simpleRestClient } from 'admin-on-rest';
 
-import constants from '../constants';
-
 const httpClient = (url, options = {}) => {
     if (!options.headers) {
         options.headers = new Headers({ Accept: 'application/json' });
