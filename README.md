@@ -2,7 +2,7 @@
 
 Hey there! This is my simple node based chat engine.
 
-# Setup
+## Setup
 
 Firstly this is an node project so start up NPM or yarn.
 
@@ -11,6 +11,24 @@ npm install
 ```
 
 Then you need a local postgres user and database with name, password and DBname of `nodechatengine`.
+
+Once you have a db ready, you can run the command:
+
+```
+yarn dbsetup
+```
+
+This will populate the DB with the correct tables.
+
+## Create User
+
+To create a user you can run the command:
+
+```
+node superuser
+```
+
+This will prompt you to enter a new user details and then you can use this user to login to the chat engine and admin.
 
 # Start Chat App
 
